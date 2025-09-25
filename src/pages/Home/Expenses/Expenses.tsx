@@ -7,6 +7,7 @@ import {
   Tooltip,
   Cell,
 } from "recharts";
+import { useExpenses } from "../../../features/expenses/hooks";
 
 const expenseData = [
   { month: "Jan", value: 8200 },
@@ -45,6 +46,8 @@ const CustomTooltip: React.FC<any> = ({ active, payload }) => {
 };
 
 const Expenses: React.FC = () => {
+  const {data} = useExpenses()
+  console.log(data)
   return (
     <div className="p-6 space-y-8">
       {/* Graph */}
