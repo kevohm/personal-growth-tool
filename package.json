@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-icons": "^1.3.2",
     "@tailwindcss/vite": "^4.1.12",
     "@tanstack/react-query": "^5.90.2",
     "@tanstack/react-router": "^1.132.6",
@@ -22,10 +24,12 @@
     "pouchdb-adapter-idb": "^9.0.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-hot-toast": "^2.6.0",
     "recharts": "^3.2.1",
     "rxdb": "^16.19.1",
     "tailwindcss": "^4.1.12",
-    "uuid": "^13.0.0"
+    "uuid": "^13.0.0",
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

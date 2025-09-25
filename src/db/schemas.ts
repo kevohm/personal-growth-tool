@@ -1,11 +1,17 @@
 // db/schemas.ts
+const primaryKeyStructure = { type: "string", maxLength: 128, }
+const baseSchema = {
+  id: primaryKeyStructure,
+  createdAt: { type: "string", format: "date-time" },
+  updatedAt: { type: "string", format: "date-time" }
+}
 export const userSchema = {
   title: "user schema",
   version: 0,
   primaryKey: "id",
   type: "object",
   properties: {
-    id: { type: "string" }, // could be UUID
+    ...baseSchema, // could be UUID
     email: { type: "string" },
     password: { type: "string" }, // hash in real apps
     name: { type: "string" }
@@ -19,13 +25,15 @@ export const expenseSchema = {
   primaryKey: "id",
   type: "object",
   properties: {
-    id: { type: "string" },
+    ...baseSchema, // could be UUID
     userId: { type: "string" },
-    date: { type: "string" },
+    name: { type: "string" },         // New field
+    date: { type: "string", format: "date" },
     category: { type: "string" },
-    amount: { type: "number" }
+    amount: { type: "number" },
+    notes: { type: "string", maxLength: 1000 } // Optional field
   },
-  required: ["id", "userId", "date", "category", "amount"]
+  required: ["id", "userId", "name", "date", "category", "amount"]
 };
 
 export const savingSchema = {
@@ -34,7 +42,7 @@ export const savingSchema = {
   primaryKey: "id",
   type: "object",
   properties: {
-    id: { type: "string" },
+    ...baseSchema, // could be UUID
     userId: { type: "string" },
     date: { type: "string" },
     amount: { type: "number" }
@@ -48,11 +56,11 @@ export const earningSchema = {
   primaryKey: "id",
   type: "object",
   properties: {
-    id: { type: "string" },
+    ...baseSchema, // could be UUID
     userId: { type: "string" },
     date: { type: "string" },
     source: { type: "string" },
-    amount: { type: "number" }
+    amount: { type: "number" },
   },
   required: ["id", "userId", "date", "source", "amount"]
 };
