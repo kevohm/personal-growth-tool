@@ -1,13 +1,18 @@
 // types.ts
-export interface ExpenseDocType {
+export interface Expense {
   id: string;
   userId: string;
+  name: string;
   amount: number;
   category: string;
-  createdAt: string;
+  date: string;
+  notes?: string;
 }
 
-export interface SavingDocType {
+export type ExpenseFormType = Pick<Expense, "amount" | "name" | "category" | "date" | "userId" | "notes">
+
+
+export interface Saving {
   id: string;
   userId: string;
   amount: number;
@@ -15,7 +20,7 @@ export interface SavingDocType {
   createdAt: string;
 }
 
-export interface EarningDocType {
+export interface Earning {
   id: string;
   userId: string;
   amount: number;
@@ -23,7 +28,7 @@ export interface EarningDocType {
   createdAt: string;
 }
 
-export interface UserDocType {
+export interface User {
   id: string;
   name: string;
   email: string;
