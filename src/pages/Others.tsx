@@ -1,11 +1,38 @@
-import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, Target, TrendingUp, Brain, Users, Rocket, CheckCircle } from 'lucide-react';
 
-const App = () => {
-  const [activeFramework, setActiveFramework] = useState('SPARK');
-  const [checkedItems, setCheckedItems] = useState({});
+import React, { useState } from "react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Target,
+  TrendingUp,
+  Brain,
+  Users,
+  Rocket,
+  CheckCircle,
+} from "lucide-react";
 
-  const frameworks = {
+type Section = {
+  title: string;
+  icon: React.ReactNode;
+  items: string[];
+};
+
+type Framework = {
+  name: string;
+  subtitle: string;
+  description: string;
+  icon: React.ReactNode;
+  color: string;
+  sections: Section[];
+};
+
+type FrameworkKey = "SPARK" | "RAPID";
+
+const  Others: React.FC = () => {
+  const [activeFramework, setActiveFramework] = useState<FrameworkKey>("SPARK");
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+
+  const frameworks: Record<FrameworkKey, Framework> = {
     SPARK: {
       name: "SPARK Framework",
       subtitle: "Skills • Purpose • Action • Reflect • Keep Growing",
@@ -21,8 +48,8 @@ const App = () => {
             "Set up weekly learning blocks (minimum 3 hours)",
             "Find mentors or experts in your field for guidance",
             "Practice skills through real startup projects and challenges",
-            "Track skill progression with measurable milestones"
-          ]
+            "Track skill progression with measurable milestones",
+          ],
         },
         {
           title: "Purpose Alignment",
@@ -32,8 +59,8 @@ const App = () => {
             "Identify how your growth serves the company's vision",
             "Set quarterly purpose check-ins with your manager",
             "Document wins that align with your core values",
-            "Regularly assess if your role energizes or drains you"
-          ]
+            "Regularly assess if your role energizes or drains you",
+          ],
         },
         {
           title: "Action Planning",
@@ -43,8 +70,8 @@ const App = () => {
             "Break down big goals into weekly actionable tasks",
             "Identify key metrics to track your personal ROI",
             "Schedule monthly reviews with stakeholders",
-            "Build accountability partnerships with colleagues"
-          ]
+            "Build accountability partnerships with colleagues",
+          ],
         },
         {
           title: "Reflection & Iteration",
@@ -54,8 +81,8 @@ const App = () => {
             "Keep a growth journal documenting lessons learned",
             "Seek feedback from peers, reports, and supervisors",
             "Analyze what's working vs. what needs adjustment",
-            "Celebrate wins and learn from setbacks openly"
-          ]
+            "Celebrate wins and learn from setbacks openly",
+          ],
         },
         {
           title: "Keep Growing",
@@ -65,10 +92,10 @@ const App = () => {
             "Attend industry events and startup meetups",
             "Share knowledge through writing, speaking, or mentoring",
             "Stay curious about adjacent skills and industries",
-            "Plan for next-level roles and responsibilities"
-          ]
-        }
-      ]
+            "Plan for next-level roles and responsibilities",
+          ],
+        },
+      ],
     },
     RAPID: {
       name: "RAPID Growth Cycles",
@@ -85,8 +112,8 @@ const App = () => {
             "Identify blockers and resource needs",
             "Review feedback from team and customers",
             "Analyze time allocation vs. impact created",
-            "Document key learnings and insights"
-          ]
+            "Document key learnings and insights",
+          ],
         },
         {
           title: "Adjust (Bi-weekly)",
@@ -96,8 +123,8 @@ const App = () => {
             "Reallocate time to high-impact activities",
             "Address skill gaps revealed by recent challenges",
             "Update personal OKRs to match company direction",
-            "Modify learning plan based on new insights"
-          ]
+            "Modify learning plan based on new insights",
+          ],
         },
         {
           title: "Plan (Monthly)",
@@ -107,8 +134,8 @@ const App = () => {
             "Identify stretch projects to accelerate development",
             "Plan skill-building activities and resources needed",
             "Schedule important conversations and feedback sessions",
-            "Define success metrics and checkpoints"
-          ]
+            "Define success metrics and checkpoints",
+          ],
         },
         {
           title: "Implement (Daily)",
@@ -118,8 +145,8 @@ const App = () => {
             "Apply new skills to current work challenges",
             "Seek out difficult conversations and feedback",
             "Experiment with new approaches and tools",
-            "Build habits that compound over time"
-          ]
+            "Build habits that compound over time",
+          ],
         },
         {
           title: "Deliver (Quarterly)",
@@ -129,33 +156,35 @@ const App = () => {
             "Present learnings and wins to leadership team",
             "Take on increased responsibilities or new challenges",
             "Mentor others and contribute to team development",
-            "Set ambitious goals for next quarter"
-          ]
-        }
-      ]
-    }
+            "Set ambitious goals for next quarter",
+          ],
+        },
+      ],
+    },
   };
 
-  const toggleCheck = (frameworkKey, sectionIndex, itemIndex) => {
+  const toggleCheck = (frameworkKey: FrameworkKey, sectionIndex: number, itemIndex: number) => {
     const key = `${frameworkKey}-${sectionIndex}-${itemIndex}`;
-    setCheckedItems(prev => ({
+    setCheckedItems((prev) => ({
       ...prev,
-      [key]: !prev[key]
+      [key]: !prev[key],
     }));
   };
 
-  const isChecked = (frameworkKey, sectionIndex, itemIndex) => {
+  const isChecked = (frameworkKey: FrameworkKey, sectionIndex: number, itemIndex: number): boolean => {
     const key = `${frameworkKey}-${sectionIndex}-${itemIndex}`;
     return checkedItems[key] || false;
   };
 
-  const getCurrentFramework = () => frameworks[activeFramework];
+  const getCurrentFramework = (): Framework => frameworks[activeFramework];
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gray-50 min-h-screen">
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-800 mb-2">Personal Growth Frameworks</h1>
-        <p className="text-lg text-gray-600">Designed for startup professionals who need to grow fast</p>
+        <p className="text-lg text-gray-600">
+          Designed for startup professionals who need to grow fast
+        </p>
       </div>
 
       {/* Framework Selector */}
@@ -163,11 +192,11 @@ const App = () => {
         {Object.entries(frameworks).map(([key, framework]) => (
           <button
             key={key}
-            onClick={() => setActiveFramework(key)}
+            onClick={() => setActiveFramework(key as FrameworkKey)}
             className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 ${
               activeFramework === key
-                ? 'bg-white shadow-lg border-2 border-purple-200 text-gray-800'
-                : 'bg-white/80 hover:bg-white hover:shadow-md text-gray-600'
+                ? "bg-white shadow-lg border-2 border-purple-200 text-gray-800"
+                : "bg-white/80 hover:bg-white hover:shadow-md text-gray-600"
             }`}
           >
             {framework.icon}
@@ -194,7 +223,7 @@ const App = () => {
                 <div className="text-purple-600">{section.icon}</div>
                 <h3 className="text-xl font-semibold text-gray-800">{section.title}</h3>
               </div>
-              
+
               <div className="grid gap-3">
                 {section.items.map((item, itemIndex) => (
                   <div
@@ -202,20 +231,24 @@ const App = () => {
                     className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors group cursor-pointer"
                     onClick={() => toggleCheck(activeFramework, sectionIndex, itemIndex)}
                   >
-                    <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 transition-colors ${
-                      isChecked(activeFramework, sectionIndex, itemIndex)
-                        ? 'bg-green-500 border-green-500'
-                        : 'border-gray-300 group-hover:border-gray-400'
-                    }`}>
+                    <div
+                      className={`w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 transition-colors ${
+                        isChecked(activeFramework, sectionIndex, itemIndex)
+                          ? "bg-green-500 border-green-500"
+                          : "border-gray-300 group-hover:border-gray-400"
+                      }`}
+                    >
                       {isChecked(activeFramework, sectionIndex, itemIndex) && (
                         <CheckCircle className="w-3 h-3 text-white" />
                       )}
                     </div>
-                    <span className={`flex-1 ${
-                      isChecked(activeFramework, sectionIndex, itemIndex)
-                        ? 'text-gray-500 line-through'
-                        : 'text-gray-700'
-                    }`}>
+                    <span
+                      className={`flex-1 ${
+                        isChecked(activeFramework, sectionIndex, itemIndex)
+                          ? "text-gray-500 line-through"
+                          : "text-gray-700"
+                      }`}
+                    >
                       {item}
                     </span>
                   </div>
@@ -230,14 +263,27 @@ const App = () => {
       <div className="mt-8 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-6">
         <h3 className="font-semibold text-gray-800 mb-3">🚀 Startup-Specific Tips</h3>
         <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
-          <div>• <strong>Move fast, but be intentional</strong> - Growth without direction wastes precious startup time</div>
-          <div>• <strong>Align with business needs</strong> - Your growth should directly impact company success</div>
-          <div>• <strong>Embrace the chaos</strong> - Use uncertainty as fuel for rapid skill development</div>
-          <div>• <strong>Build as you climb</strong> - Help others grow while you're growing yourself</div>
+          <div>
+            • <strong>Move fast, but be intentional</strong> - Growth without direction wastes
+            precious startup time
+          </div>
+          <div>
+            • <strong>Align with business needs</strong> - Your growth should directly impact company
+            success
+          </div>
+          <div>
+            • <strong>Embrace the chaos</strong> - Use uncertainty as fuel for rapid skill
+            development
+          </div>
+          <div>
+            • <strong>Build as you climb</strong> - Help others grow while you're growing yourself
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default App;
+export default Others;
+
+
