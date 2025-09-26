@@ -1,1 +1,22 @@
 @import "tailwindcss";
+
+
+@import "react-day-picker/style.css";
+
+/* Override DayPicker defaults */
+.rdp-root {
+  --rdp-accent-color: #16a34a; /* Tailwind green-600 */
+  --rdp-accent-background-color: #dcfce7; /* Tailwind green-100 */
+  --rdp-day_button-border-radius: 0.75rem; /* rounded-lg */
+  --rdp-day_button-height: 36px;
+  --rdp-day_button-width: 36px;
+  --rdp-day-height: 36px;
+  --rdp-day-width: 36px;
+  --rdp-selected-border: none;
+  --rdp-today-color: #16a34a; /* today text green */
+  --rdp-weekday-opacity: 0.6;
+  --rdp-outside-opacity: 0.3;
+  --rdp-nav_button-width: 28px;
+  --rdp-nav_button-height: 28px;
+  --rdp-nav_button-disabled-opacity: 0.3;
+}

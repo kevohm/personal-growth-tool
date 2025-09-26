@@ -1,3 +1,5 @@
+import { PlusIcon } from "@radix-ui/react-icons";
+import { Link } from "@tanstack/react-router";
 import React from "react";
 import {
   Bar,
@@ -9,7 +11,6 @@ import {
 } from "recharts";
 import { useExpenses } from "../../../features/expenses/hooks";
 import type { Expense } from "../../models/expense";
-import AddExpense from "./add/AddExpense";
 
 const expenseData = [
   { month: "Jan", value: 8200 },
@@ -118,7 +119,13 @@ const Expenses: React.FC = () => {
           <button className="text-sm border border-slate-200 rounded-full px-3 py-1">
             Filter
           </button>
-          <AddExpense />
+          <Link
+            to="/home/expenses/add"
+            className="px-4 py-2 flex items-center gap-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition"
+          >
+            <PlusIcon className="w-4 h-4" />
+            <span>Add Expense</span>
+          </Link>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full text-left text-sm">
@@ -142,8 +149,12 @@ const Expenses: React.FC = () => {
                     <td className="py-2 text-rose-600 font-semibold">
                       {formatCurrency(expense.amount)}
                     </td>
-                    <td className="py-2 font-medium text-slate-700">{expense.name}</td>
-                    <td className="py-2 font-medium text-slate-700">{expense.notes}</td>
+                    <td className="py-2 font-medium text-slate-700">
+                      {expense.name}
+                    </td>
+                    <td className="py-2 font-medium text-slate-700">
+                      {expense.notes}
+                    </td>
                   </tr>
                 );
               })}
