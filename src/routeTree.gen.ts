@@ -13,8 +13,9 @@ import { Route as HomeRouteImport } from './routes/_home'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as HomeHomeIndexRouteImport } from './routes/_home/home/index'
 import { Route as HomeHomeSavingsRouteImport } from './routes/_home/home/savings'
-import { Route as HomeHomeExpensesRouteImport } from './routes/_home/home/expenses'
 import { Route as HomeHomeEarningsRouteImport } from './routes/_home/home/earnings'
+import { Route as HomeHomeExpensesIndexRouteImport } from './routes/_home/home/expenses/index'
+import { Route as HomeHomeExpensesAddRouteImport } from './routes/_home/home/expenses/add'
 
 const HomeRoute = HomeRouteImport.update({
   id: '/_home',
@@ -35,58 +36,74 @@ const HomeHomeSavingsRoute = HomeHomeSavingsRouteImport.update({
   path: '/home/savings',
   getParentRoute: () => HomeRoute,
 } as any)
-const HomeHomeExpensesRoute = HomeHomeExpensesRouteImport.update({
-  id: '/home/expenses',
-  path: '/home/expenses',
-  getParentRoute: () => HomeRoute,
-} as any)
 const HomeHomeEarningsRoute = HomeHomeEarningsRouteImport.update({
   id: '/home/earnings',
   path: '/home/earnings',
+  getParentRoute: () => HomeRoute,
+} as any)
+const HomeHomeExpensesIndexRoute = HomeHomeExpensesIndexRouteImport.update({
+  id: '/home/expenses/',
+  path: '/home/expenses/',
+  getParentRoute: () => HomeRoute,
+} as any)
+const HomeHomeExpensesAddRoute = HomeHomeExpensesAddRouteImport.update({
+  id: '/home/expenses/add',
+  path: '/home/expenses/add',
   getParentRoute: () => HomeRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/home/earnings': typeof HomeHomeEarningsRoute
-  '/home/expenses': typeof HomeHomeExpensesRoute
   '/home/savings': typeof HomeHomeSavingsRoute
   '/home': typeof HomeHomeIndexRoute
+  '/home/expenses/add': typeof HomeHomeExpensesAddRoute
+  '/home/expenses': typeof HomeHomeExpensesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/home/earnings': typeof HomeHomeEarningsRoute
-  '/home/expenses': typeof HomeHomeExpensesRoute
   '/home/savings': typeof HomeHomeSavingsRoute
   '/home': typeof HomeHomeIndexRoute
+  '/home/expenses/add': typeof HomeHomeExpensesAddRoute
+  '/home/expenses': typeof HomeHomeExpensesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_home': typeof HomeRouteWithChildren
   '/_home/home/earnings': typeof HomeHomeEarningsRoute
-  '/_home/home/expenses': typeof HomeHomeExpensesRoute
   '/_home/home/savings': typeof HomeHomeSavingsRoute
   '/_home/home/': typeof HomeHomeIndexRoute
+  '/_home/home/expenses/add': typeof HomeHomeExpensesAddRoute
+  '/_home/home/expenses/': typeof HomeHomeExpensesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/home/earnings'
-    | '/home/expenses'
     | '/home/savings'
     | '/home'
+    | '/home/expenses/add'
+    | '/home/expenses'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/home/earnings' | '/home/expenses' | '/home/savings' | '/home'
+  to:
+    | '/'
+    | '/home/earnings'
+    | '/home/savings'
+    | '/home'
+    | '/home/expenses/add'
+    | '/home/expenses'
   id:
     | '__root__'
     | '/'
     | '/_home'
     | '/_home/home/earnings'
-    | '/_home/home/expenses'
     | '/_home/home/savings'
     | '/_home/home/'
+    | '/_home/home/expenses/add'
+    | '/_home/home/expenses/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -124,13 +141,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeHomeSavingsRouteImport
       parentRoute: typeof HomeRoute
     }
-    '/_home/home/expenses': {
-      id: '/_home/home/expenses'
-      path: '/home/expenses'
-      fullPath: '/home/expenses'
-      preLoaderRoute: typeof HomeHomeExpensesRouteImport
-      parentRoute: typeof HomeRoute
-    }
     '/_home/home/earnings': {
       id: '/_home/home/earnings'
       path: '/home/earnings'
@@ -138,21 +148,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeHomeEarningsRouteImport
       parentRoute: typeof HomeRoute
     }
+    '/_home/home/expenses/': {
+      id: '/_home/home/expenses/'
+      path: '/home/expenses'
+      fullPath: '/home/expenses'
+      preLoaderRoute: typeof HomeHomeExpensesIndexRouteImport
+      parentRoute: typeof HomeRoute
+    }
+    '/_home/home/expenses/add': {
+      id: '/_home/home/expenses/add'
+      path: '/home/expenses/add'
+      fullPath: '/home/expenses/add'
+      preLoaderRoute: typeof HomeHomeExpensesAddRouteImport
+      parentRoute: typeof HomeRoute
+    }
   }
 }
 
 interface HomeRouteChildren {
   HomeHomeEarningsRoute: typeof HomeHomeEarningsRoute
-  HomeHomeExpensesRoute: typeof HomeHomeExpensesRoute
   HomeHomeSavingsRoute: typeof HomeHomeSavingsRoute
   HomeHomeIndexRoute: typeof HomeHomeIndexRoute
+  HomeHomeExpensesAddRoute: typeof HomeHomeExpensesAddRoute
+  HomeHomeExpensesIndexRoute: typeof HomeHomeExpensesIndexRoute
 }
 
 const HomeRouteChildren: HomeRouteChildren = {
   HomeHomeEarningsRoute: HomeHomeEarningsRoute,
-  HomeHomeExpensesRoute: HomeHomeExpensesRoute,
   HomeHomeSavingsRoute: HomeHomeSavingsRoute,
   HomeHomeIndexRoute: HomeHomeIndexRoute,
+  HomeHomeExpensesAddRoute: HomeHomeExpensesAddRoute,
+  HomeHomeExpensesIndexRoute: HomeHomeExpensesIndexRoute,
 }
 
 const HomeRouteWithChildren = HomeRoute._addFileChildren(HomeRouteChildren)
