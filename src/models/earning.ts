@@ -1,5 +1,5 @@
 import z from "zod";
-import { baseSchema } from ".";
+import { amountSchema, baseSchema, dateSchema } from ".";
 
 
 /**
@@ -7,8 +7,13 @@ import { baseSchema } from ".";
  */
 export const earningZodSchema = baseSchema.extend({
   userId: z.string(),
-  date: z.string(),
+  date: dateSchema,
   source: z.string(),
-  amount: z.number(),
+  amount: amountSchema,
+  notes: z.string().optional()
 });
+
+export const updateEarningZodSchema = earningZodSchema.partial()
+
 export type Earning = z.infer<typeof earningZodSchema>;
+export type EarningUpdate = z.infer<typeof updateEarningZodSchema>;

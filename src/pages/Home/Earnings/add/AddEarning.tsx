@@ -1,9 +1,9 @@
 import { createId } from "@paralleldrive/cuid2";
 import * as React from "react";
 import toast from "react-hot-toast";
-import { useAddExpense } from "../../../../features/expenses/hooks";
-import { expenseZodSchema } from "../../../../models/expense";
-import type { ExpenseFormType } from "../../../../types/types";
+import { useAddEarning } from "../../../../features/earnings/hooks";
+import { earningZodSchema } from "../../../../models/earning";
+import type { EarningFormType } from "../../../../types/types";
 import { handleError } from "../../../../utils/error";
 import dayjs from "dayjs";
 
@@ -13,17 +13,20 @@ import { FormFieldWrapper } from "../../../../components/ui/FormFieldWrapper";
 import { Input } from "../../../../components/ui/Input";
 import { Select } from "../../../../components/ui/Select";
 import { Textarea } from "../../../../components/ui/Textarea";
+import { useNavigate } from "@tanstack/react-router";
 
-const AddExpense: React.FC = () => {
-  const { mutateAsync } = useAddExpense();
-  const [form, setForm] = React.useState<ExpenseFormType>({
-    name: "",
+const defaultBody = {
+    source: "",
     amount: 0,
-    category: "",
     notes: "",
     date: "",
     userId: createId(),
-  });
+  }
+
+const AddEarning: React.FC = () => {
+  const { mutateAsync } = useAddEarning();
+  const [form, setForm] = React.useState<EarningFormType>(defaultBody);
+  const navigate = useNavigate()
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -36,22 +39,16 @@ const AddExpense: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const expense = await expenseZodSchema.parseAsync(form);
+      const earning = await earningZodSchema.parseAsync(form);
 
-      await toast.promise(mutateAsync(expense), {
-        loading: "Adding expense...",
-        success: "Expense added successfully 🎉",
-        error: "Failed to add expense. Please try again.",
+      await toast.promise(mutateAsync(earning), {
+        loading: "Adding earning...",
+        success: "Earning added successfully 🎉",
+        error: "Failed to add earning. Please try again.",
       });
 
-      setForm({
-        userId: form.userId,
-        name: "",
-        amount: 0,
-        category: "",
-        notes: "",
-        date: "",
-      } as ExpenseFormType);
+      setForm(defaultBody as EarningFormType);
+      navigate({to:"/home/earnings"})
     } catch (err) {
       handleError(err);
     }
@@ -60,17 +57,17 @@ const AddExpense: React.FC = () => {
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       {/* Page Title */}
-      <h1 className="mb-6 text-2xl font-bold">Add New Expense</h1>
+      <h1 className="mb-6 text-2xl font-bold">Add New Earning</h1>
 
-      {/* Expense Form */}
+      {/* Earning Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Expense Name */}
-        <FormFieldWrapper label="Expense Name" htmlFor="name">
+        {/* Source */}
+        <FormFieldWrapper label="Source" htmlFor="source">
           <Input
-            id="name"
-            name="name"
-            placeholder="Enter expense name"
-            value={form.name}
+            id="source"
+            name="source"
+            placeholder="Enter earning source"
+            value={form.source}
             onChange={handleChange}
             required
           />
@@ -89,22 +86,6 @@ const AddExpense: React.FC = () => {
           />
         </FormFieldWrapper>
 
-        {/* Category */}
-        <FormFieldWrapper label="Category" htmlFor="category">
-          <Select
-            value={form.category}
-            onValueChange={(val) => setForm({ ...form, category: val })}
-            placeholder="Select category"
-            options={[
-              { value: "Food", label: "Food" },
-              { value: "Transport", label: "Transport" },
-              { value: "Shopping", label: "Shopping" },
-              { value: "Bills", label: "Bills" },
-              { value: "Other", label: "Other" },
-            ]}
-          />
-        </FormFieldWrapper>
-
         {/* Date */}
         <FormFieldWrapper label="Date" htmlFor="date">
           <DatePicker
@@ -113,11 +94,7 @@ const AddExpense: React.FC = () => {
             }
             onChange={(day) => {
               const date = day ? dayjs(day).format("YYYY-MM-DD") : "";
-
-              setForm({
-                ...form,
-                date,
-              });
+              setForm({ ...form, date });
             }}
             placeholder="Select a date"
           />
@@ -139,14 +116,7 @@ const AddExpense: React.FC = () => {
           <button
             type="reset"
             onClick={() =>
-              setForm({
-                userId: form.userId,
-                name: "",
-                amount: 0,
-                category: "",
-                notes: "",
-                date: "",
-              } as ExpenseFormType)
+              setForm(defaultBody as EarningFormType)
             }
             className="rounded-lg border border-gray-300 px-4 py-2 text-sm hover:bg-gray-50"
           >
@@ -154,9 +124,9 @@ const AddExpense: React.FC = () => {
           </button>
           <button
             type="submit"
-            className="rounded-lg bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
           >
-            Add Expense
+            Add Earning
           </button>
         </div>
       </form>
@@ -164,4 +134,4 @@ const AddExpense: React.FC = () => {
   );
 };
 
-export default AddExpense;
+export default AddEarning;

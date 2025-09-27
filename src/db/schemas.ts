@@ -44,8 +44,24 @@ export const savingSchema = {
   properties: {
     ...baseSchema, // could be UUID
     userId: { type: "string" },
-    date: { type: "string" },
-    amount: { type: "number" }
+    date: { type: "string", format: "date" },
+    notes: { type: "string" },
+    amount: { type: "number" },
+    category: {
+      type: "string"
+    },
+    source: {
+      type: "string"
+    },
+    recurring: {
+      type: "boolean",
+      default: false
+    },
+    tags: {
+      type: "array",
+      items: { type: "string" },
+      default:[]
+    },
   },
   required: ["id", "userId", "date", "amount"]
 };
@@ -58,8 +74,9 @@ export const earningSchema = {
   properties: {
     ...baseSchema, // could be UUID
     userId: { type: "string" },
-    date: { type: "string" },
+    date: { type: "string", format: "date" },
     source: { type: "string" },
+    notes: { type: "string" },
     amount: { type: "number" },
   },
   required: ["id", "userId", "date", "source", "amount"]

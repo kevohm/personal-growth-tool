@@ -18,7 +18,7 @@ import type {
 addRxPlugin(RxDBDevModePlugin);
 
 // 🔹 Collection typing
-export type FinanceCollections = {
+export type Collections = {
   expenses: RxCollection<Expense>;
   savings: RxCollection<Saving>;
   earnings: RxCollection<Earning>;
@@ -27,7 +27,7 @@ export type FinanceCollections = {
 const DB_NAME = "finance";
 
 // 🔹 Database type
-export type FinanceDatabase = RxDatabase<FinanceCollections>;
+export type FinanceDatabase = RxDatabase<Collections>;
 
 // 🔹 Database instance
 let dbPromise: Promise<FinanceDatabase> | null = null;
@@ -39,7 +39,7 @@ export const getDb = async (): Promise<FinanceDatabase> => {
     //   await removeRxDatabase(DB_NAME, getRxStorageDexie());
     //   console.log("Dev mode: old DB removed");
     // }
-    dbPromise = createRxDatabase<FinanceCollections>({
+    dbPromise = createRxDatabase<Collections>({
       name: DB_NAME, // database name
       storage: wrappedValidateAjvStorage({ storage: getRxStorageDexie() })
       ,
