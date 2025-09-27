@@ -1,21 +1,21 @@
 import z from "zod";
-import { baseSchema } from ".";
+import { amountSchema, baseSchema, dateSchema } from ".";
 
 /**
  * Saving schema
  */
 export const savingZodSchema = baseSchema.extend({
   userId: z.string(),
-  amount: z.number().nonnegative("Amount must be 0 or greater"),
+  amount: amountSchema,
+  date: dateSchema,
   goal: z.string().min(1, "Goal is required"),
-
 
   // Optional fields
   notes: z.string().optional(),
-  category: z.string().optional(),   // e.g., emergency, retirement
-  source: z.string().optional(),     // e.g., salary, gift
-  recurring: z.boolean().default(false).optional(),
-  tags: z.array(z.string()).optional(),
+  category: z.string(),   // e.g., emergency, retirement
+  source: z.string(),     // e.g., salary, gift
+  recurring: z.boolean().default(false),
+  tags: z.array(z.string()),
 });
 
 export type Saving = z.infer<typeof savingZodSchema>;

@@ -1,20 +1,34 @@
 import { ArrowDown, ArrowUp, MoreHorizontal } from "lucide-react";
 import React from "react";
+import type { Range } from "../../../../utils/analytics"; // adjust path
 
 interface WidgetProps {
   title: string;
   amount: number;
   change: number; // positive or negative percentage
   isCurrency?: boolean;
+  range?: Range; // new
 }
+
+const rangeLabels: Record<Range, string> = {
+  "7d": "from last week",
+  "30d": "from last month",
+  "3m": "from last 3 months",
+  "6m": "from last 6 months",
+  "1y": "from last year",
+  ytd: "from last year-to-date",
+  all: "since beginning",
+};
 
 const Widget: React.FC<WidgetProps> = ({
   title,
   amount,
   change,
   isCurrency = true,
+  range = "30d",
 }) => {
   const isPositive = change >= 0;
+  const rangeLabel = rangeLabels[range] || "previous period";
 
   return (
     <div className="bg-white rounded-2xl p-5 shadow-sm flex flex-col justify-between">
@@ -44,9 +58,9 @@ const Widget: React.FC<WidgetProps> = ({
           }`}
         >
           {isPositive ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
-          {Math.abs(change)}%
+          {Math.abs(change).toFixed(1)}%
         </span>
-        <span className="text-slate-500">from last month</span>
+        <span className="text-slate-500">{rangeLabel}</span>
       </div>
     </div>
   );

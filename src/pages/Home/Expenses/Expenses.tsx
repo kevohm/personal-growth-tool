@@ -74,7 +74,7 @@ const Expenses: React.FC = () => {
 
           <Link
             to="/home/expenses/add"
-            className="px-4 py-2 flex items-center gap-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition"
+            className="px-4 py-2 flex items-center gap-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition"
           >
             <PlusIcon className="w-4 h-4" />
             <span>Add Expense</span>
@@ -107,8 +107,10 @@ const Expenses: React.FC = () => {
                     <td className="py-2 font-medium text-slate-700">
                       {expense.name}
                     </td>
-                    <td className="py-2 font-medium text-slate-700">
-                      {expense.notes}
+                  <td className="py-2 text-slate-400 italic">
+                      {expense?.notes?.trim()
+                        ? expense.notes
+                        : "No notes added"}
                     </td>
                     <td className="py-2 text-right">
                       <div className="flex justify-end gap-2">

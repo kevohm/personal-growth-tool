@@ -69,6 +69,7 @@ export const DatePicker: React.FC<{
               onChange(day ?? undefined);
               setOpen(false);
             }}
+            endMonth={new Date(2025, 11)}
             captionLayout="dropdown"
             classNames={{
               root: "rdp-root text-sm text-gray-700  ",

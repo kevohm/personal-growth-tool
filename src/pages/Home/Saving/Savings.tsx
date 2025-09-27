@@ -1,6 +1,6 @@
-import React, { useMemo, useState } from "react";
 import { FilePlusIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Link, useNavigate } from "@tanstack/react-router";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 
 import { Select } from "../../../components/ui/Select";
@@ -12,8 +12,8 @@ import {
 import type { Saving } from "../../../models/saving";
 import { RANGE_OPTIONS, type Range } from "../../../utils/analytics";
 import { handleError } from "../../../utils/error";
-import AnalyticsChart from "../Dashboard/components/AnalyticsChart";
 import { formatCurrency } from "../../../utils/format";
+import AnalyticsChart from "../Dashboard/components/AnalyticsChart";
 
 export const EmptyState: React.FC = () => {
   return (
@@ -32,12 +32,12 @@ export const EmptyState: React.FC = () => {
 const Savings: React.FC = () => {
   const { data: savings } = useSavings();
   const [range, setRange] = useState<Range>("30d");
-  const { data:analytics } = useSavingAnalytics(range);
+  const { data: analytics } = useSavingAnalytics(range);
 
   const navigate = useNavigate();
   const { mutateAsync: deleteSaving } = useDeleteSaving();
 
-
+  console.log(savings);
   // console.log(analytics)
   // console.log(data, savings)
 
@@ -76,15 +76,15 @@ const Savings: React.FC = () => {
 
           <Link
             to="/home/savings/add"
-            className="px-4 py-2 flex items-center gap-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
+            className="px-4 py-2 flex items-center gap-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition"
           >
             <PlusIcon className="w-4 h-4" />
             <span>Add Saving</span>
           </Link>
         </div>
 
-        {savings && Array.isArray(savings) && savings?.length === 0 ? (
-           <div className="overflow-x-auto">
+        {savings && Array.isArray(savings) && savings?.length > 0 ? (
+          <div className="overflow-x-auto">
             <table className="min-w-full text-left text-sm">
               <thead className="text-slate-500 border-b border-slate-200">
                 <tr>
@@ -111,8 +111,9 @@ const Savings: React.FC = () => {
                     <td className="py-2 font-medium text-slate-700">
                       {saving.source || "N/A"}
                     </td>
-                    <td className="py-2 font-medium text-slate-700">
-                      {saving.notes || "N/A"}
+
+                    <td className="py-2 text-slate-400 italic">
+                      {saving?.notes?.trim() ? saving.notes : "No notes added"}
                     </td>
                     <td className="py-2 text-right">
                       <div className="flex justify-end gap-2">
@@ -160,7 +161,6 @@ const Savings: React.FC = () => {
           </div>
         ) : (
           <EmptyState />
-         
         )}
       </div>
     </div>

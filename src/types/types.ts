@@ -16,6 +16,7 @@ export interface Saving {
   id: string;
   userId: string;
   amount: number;
+  date: string;
   goal: string;
   notes?: string;
   category?: string;   // e.g., "emergency", "retirement"
@@ -24,7 +25,7 @@ export interface Saving {
   tags?: string[];     // custom tags
 }
 
-export type SavingFormType = Partial<Omit<Saving, "id" | "userId">>;
+export type SavingFormType = Partial<Omit<Saving, "id">>;
 
 
 export interface Earning {

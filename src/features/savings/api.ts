@@ -3,13 +3,14 @@ import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 
 import { getDb } from "../../db";
-import type { Saving, SavingUpdate } from "../../models/saving";
+import type { SavingUpdate } from "../../models/saving";
 import {
   getDateFormat,
   getDateRange,
   getStepUnit,
   type Range,
 } from "../../utils/analytics";
+import type {Saving} from "../../types/types"
 
 // ✅ Fetch savings analytics
 export const fetchSavingAnalytics = async (range: Range = "30d") => {
@@ -55,7 +56,16 @@ export const fetchSavingAnalytics = async (range: Range = "30d") => {
 export const fetchSavings = async () => {
   const db = await getDb();
   const docs = await db.savings.find().exec();
-  return docs.map((d: any) => d.toJSON());
+  return docs.map((d:any) => d.toJSON());
+};
+
+// ✅ Read single saving by id
+export const fetchSavingById = async (id: string) => {
+  const db = await getDb();
+  const doc = await db.savings.findOne({ selector: { id } }).exec();
+
+  if (!doc) return null; // return null if not found
+  return doc.toJSON();
 };
 
 // ✅ Create new saving

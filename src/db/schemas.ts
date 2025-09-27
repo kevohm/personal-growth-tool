@@ -46,6 +46,7 @@ export const savingSchema = {
     userId: { type: "string" },
     date: { type: "string", format: "date" },
     notes: { type: "string" },
+    goal: { type: "string" },
     amount: { type: "number" },
     category: {
       type: "string"

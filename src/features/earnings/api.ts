@@ -4,20 +4,26 @@ import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 
 import { getDb } from "../../db";
-import type { Earning, EarningFormType } from "../../types/types";
+import type { EarningUpdate } from "../../models/earning";
+import type { Earning } from "../../types/types";
 import {
   getDateFormat,
   getDateRange,
   getStepUnit,
   type Range,
 } from "../../utils/analytics";
-import type { EarningUpdate } from "../../models/earning";
 
 // ✅ Read all earnings
 export const fetchEarnings = async () => {
   const db = await getDb();
   const docs = await db.earnings.find().exec();
   return docs.map((d: any) => d.toJSON());
+};
+// ✅ Read single earning
+export const fetchEarningById = async (id:string) => {
+  const db = await getDb();
+  const doc = await db.earnings.findOne({selector:{id}}).exec();
+  return doc ? doc.toJSON() : null;
 };
 
 // ✅ Create new earning

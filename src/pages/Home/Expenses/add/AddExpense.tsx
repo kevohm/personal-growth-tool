@@ -13,9 +13,11 @@ import { FormFieldWrapper } from "../../../../components/ui/FormFieldWrapper";
 import { Input } from "../../../../components/ui/Input";
 import { Select } from "../../../../components/ui/Select";
 import { Textarea } from "../../../../components/ui/Textarea";
+import { useNavigate } from "@tanstack/react-router";
 
 const AddExpense: React.FC = () => {
   const { mutateAsync } = useAddExpense();
+  const navigate = useNavigate()
   const [form, setForm] = React.useState<ExpenseFormType>({
     name: "",
     amount: 0,
@@ -52,6 +54,7 @@ const AddExpense: React.FC = () => {
         notes: "",
         date: "",
       } as ExpenseFormType);
+      navigate({to:"/home/expenses"})
     } catch (err) {
       handleError(err);
     }
@@ -108,6 +111,7 @@ const AddExpense: React.FC = () => {
         {/* Date */}
         <FormFieldWrapper label="Date" htmlFor="date">
           <DatePicker
+          
             value={
               form.date ? dayjs(form.date, "YYYY-MM-DD").toDate() : undefined
             }

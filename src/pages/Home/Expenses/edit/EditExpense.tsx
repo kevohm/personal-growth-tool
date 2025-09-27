@@ -1,11 +1,14 @@
+import { useNavigate, useParams } from "@tanstack/react-router"; // or react-router-dom depending on your setup
+import dayjs from "dayjs";
 import * as React from "react";
 import toast from "react-hot-toast";
-import { useParams, useNavigate } from "@tanstack/react-router"; // or react-router-dom depending on your setup
-import { useExpenses, useUpdateExpense } from "../../../../features/expenses/hooks";
-import { expenseZodSchema, updateExpenseZodSchema } from "../../../../models/expense";
-import type { ExpenseFormType } from "../../../../types/types";
+import {
+  useExpense,
+  useUpdateExpense,
+} from "../../../../features/expenses/hooks";
+import { updateExpenseZodSchema } from "../../../../models/expense";
+import type { Expense, ExpenseFormType } from "../../../../types/types";
 import { handleError } from "../../../../utils/error";
-import dayjs from "dayjs";
 
 /* ✅ Shared UI components */
 import { DatePicker } from "../../../../components/ui/DatePicker";
@@ -18,11 +21,8 @@ const EditExpense: React.FC = () => {
   const { id } = useParams({ strict: false }); // get expense id from URL
   const navigate = useNavigate();
 
-  const { data: expenses, isLoading } = useExpenses();
+  const { data: expense, isLoading, error } = useExpense(id);
   const { mutateAsync: updateExpense } = useUpdateExpense();
-
-  // Find the expense we’re editing
-  const expense = expenses?.find((e) => e.id === id);
 
   const [form, setForm] = React.useState<ExpenseFormType | null>(null);
 
@@ -31,20 +31,23 @@ const EditExpense: React.FC = () => {
       setForm({
         ...expense,
         date: expense.date ? dayjs(expense.date).format("YYYY-MM-DD") : "",
-      });
+      } as Expense);
     }
   }, [expense]);
 
   if (isLoading) {
     return <p>Loading expense...</p>;
   }
+  if (error) return <p>Something went wrong</p>;
 
   if (!expense) {
     return <p>Expense not found.</p>;
   }
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     if (!form) return;
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -53,19 +56,16 @@ const EditExpense: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form) return;
-    if(!id) return toast.error("Invalid request")
+    if (!id) return toast.error("Invalid request");
 
     try {
       const validatedExpense = await updateExpenseZodSchema.parseAsync(form);
 
-      await toast.promise(
-        updateExpense({ id, updates: validatedExpense }),
-        {
-          loading: "Updating expense...",
-          success: "Expense updated successfully 🎉",
-          error: "Failed to update expense. Please try again.",
-        }
-      );
+      await toast.promise(updateExpense({ id, updates: validatedExpense }), {
+        loading: "Updating expense...",
+        success: "Expense updated successfully 🎉",
+        error: "Failed to update expense. Please try again.",
+      });
 
       navigate({ to: "/home/expenses" }); // redirect after update
     } catch (err) {
@@ -123,7 +123,9 @@ const EditExpense: React.FC = () => {
           {/* Date */}
           <FormFieldWrapper label="Date" htmlFor="date">
             <DatePicker
-              value={form.date ? dayjs(form.date, "YYYY-MM-DD").toDate() : undefined}
+              value={
+                form.date ? dayjs(form.date, "YYYY-MM-DD").toDate() : undefined
+              }
               onChange={(day) => {
                 const date = day ? dayjs(day).format("YYYY-MM-DD") : "";
                 setForm({ ...form, date });
@@ -147,7 +149,7 @@ const EditExpense: React.FC = () => {
           <div className="flex justify-end gap-3 pt-4">
             <button
               type="button"
-              onClick={() => navigate({ to:"/home/expenses" })}
+              onClick={() => navigate({ to: "/home/expenses" })}
               className="rounded-lg border border-gray-300 px-4 py-2 text-sm hover:bg-gray-50"
             >
               Cancel
