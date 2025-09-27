@@ -1,11 +1,11 @@
 // db.ts
-import { createRxDatabase, removeRxDatabase} from "rxdb";
-import type {RxDatabase, RxCollection} from "rxdb";
+import type { RxCollection, RxDatabase } from "rxdb";
+import { createRxDatabase } from "rxdb";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
-import { earningSchema, expenseSchema, userSchema, savingSchema } from "./schemas";
+import { earningSchema, expenseSchema, savingSchema, userSchema } from "./schemas";
 // 🔹 Optional: dev-mode plugin for debugging
-import { RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
 import { addRxPlugin } from 'rxdb/plugins/core';
+import { RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
 import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv';
 
 import type {
@@ -41,10 +41,10 @@ export const getDb = async (): Promise<FinanceDatabase> => {
     // }
     dbPromise = createRxDatabase<FinanceCollections>({
       name: DB_NAME, // database name
-      storage: wrappedValidateAjvStorage({storage:getRxStorageDexie()})
+      storage: wrappedValidateAjvStorage({ storage: getRxStorageDexie() })
       ,
     }).then(async (db) => {
-      
+
       await db.addCollections({
         expenses: { schema: expenseSchema },
         savings: { schema: savingSchema },

@@ -143,7 +143,7 @@ export default function EarningsChart({
               radius={[8, 8, 0, 0]}
               isAnimationActive={false}
             >
-              {data.map((entry, index) => {
+              {data.map((_, index) => {
                 const isHighlighted = index === highlightedIndex;
                 return (
                   <Cell

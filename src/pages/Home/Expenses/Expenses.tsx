@@ -10,7 +10,7 @@ import {
   XAxis,
 } from "recharts";
 import { useExpenses } from "../../../features/expenses/hooks";
-import type { Expense } from "../../models/expense";
+import type { Expense } from "../../../models/expense";
 
 const expenseData = [
   { month: "Jan", value: 8200 },

@@ -1,5 +1,5 @@
 import { getDb } from "../../db";
-import type { Expense } from "../../pages/models/expense";
+import type { Expense } from "../../models/expense";
 
 // ✅ Read all expenses
 export const fetchExpenses = async () => {

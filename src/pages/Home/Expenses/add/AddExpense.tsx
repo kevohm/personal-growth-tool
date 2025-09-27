@@ -1,18 +1,17 @@
 import { createId } from "@paralleldrive/cuid2";
-import { CalendarIcon } from "@radix-ui/react-icons";
 import * as React from "react";
 import toast from "react-hot-toast";
 import { useAddExpense } from "../../../../features/expenses/hooks";
+import { expenseZodSchema } from "../../../../models/expense";
 import type { ExpenseFormType } from "../../../../types/types";
 import { handleError } from "../../../../utils/error";
-import { expenseZodSchema } from "../../../models/expense";
 
 /* ✅ Shared UI components */
+import { DatePicker } from "../../../../components/ui/DatePicker";
 import { FormFieldWrapper } from "../../../../components/ui/FormFieldWrapper";
 import { Input } from "../../../../components/ui/Input";
 import { Select } from "../../../../components/ui/Select";
 import { Textarea } from "../../../../components/ui/Textarea";
-import { DatePicker } from "../../../../components/ui/DatePicker";
 
 const AddExpense: React.FC = () => {
   const { mutateAsync } = useAddExpense();
@@ -106,15 +105,18 @@ const AddExpense: React.FC = () => {
         </FormFieldWrapper>
 
         {/* Date */}
-<FormFieldWrapper label="Date" htmlFor="date">
-  <DatePicker
-    value={form.date ? new Date(form.date) : undefined}
-    onChange={(day) =>
-      setForm({ ...form, date: day ? day.toISOString().split("T")[0] : "" })
-    }
-    placeholder="Select a date"
-  />
-</FormFieldWrapper>
+        <FormFieldWrapper label="Date" htmlFor="date">
+          <DatePicker
+            value={form.date ? new Date(form.date) : undefined}
+            onChange={(day) =>
+              setForm({
+                ...form,
+                date: day ? day.toISOString().split("T")[0] : "",
+              })
+            }
+            placeholder="Select a date"
+          />
+        </FormFieldWrapper>
 
         {/* Notes */}
         <FormFieldWrapper label="Notes" htmlFor="notes">

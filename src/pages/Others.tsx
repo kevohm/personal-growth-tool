@@ -1,15 +1,12 @@
-
-import React, { useState } from "react";
 import {
-  ChevronDown,
-  ChevronUp,
+  Brain,
+  CheckCircle,
+  Rocket,
   Target,
   TrendingUp,
-  Brain,
   Users,
-  Rocket,
-  CheckCircle,
 } from "lucide-react";
+import React, { useState } from "react";
 
 type Section = {
   title: string;
@@ -28,7 +25,7 @@ type Framework = {
 
 type FrameworkKey = "SPARK" | "RAPID";
 
-const  Others: React.FC = () => {
+const Others: React.FC = () => {
   const [activeFramework, setActiveFramework] = useState<FrameworkKey>("SPARK");
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
 
@@ -36,7 +33,8 @@ const  Others: React.FC = () => {
     SPARK: {
       name: "SPARK Framework",
       subtitle: "Skills • Purpose • Action • Reflect • Keep Growing",
-      description: "A comprehensive personal growth model for startup professionals",
+      description:
+        "A comprehensive personal growth model for startup professionals",
       icon: <Rocket className="w-6 h-6" />,
       color: "bg-gradient-to-r from-purple-500 to-pink-500",
       sections: [
@@ -163,7 +161,11 @@ const  Others: React.FC = () => {
     },
   };
 
-  const toggleCheck = (frameworkKey: FrameworkKey, sectionIndex: number, itemIndex: number) => {
+  const toggleCheck = (
+    frameworkKey: FrameworkKey,
+    sectionIndex: number,
+    itemIndex: number
+  ) => {
     const key = `${frameworkKey}-${sectionIndex}-${itemIndex}`;
     setCheckedItems((prev) => ({
       ...prev,
@@ -171,7 +173,11 @@ const  Others: React.FC = () => {
     }));
   };
 
-  const isChecked = (frameworkKey: FrameworkKey, sectionIndex: number, itemIndex: number): boolean => {
+  const isChecked = (
+    frameworkKey: FrameworkKey,
+    sectionIndex: number,
+    itemIndex: number
+  ): boolean => {
     const key = `${frameworkKey}-${sectionIndex}-${itemIndex}`;
     return checkedItems[key] || false;
   };
@@ -181,7 +187,9 @@ const  Others: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gray-50 min-h-screen">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-2">Personal Growth Frameworks</h1>
+        <h1 className="text-4xl font-bold text-gray-800 mb-2">
+          Personal Growth Frameworks
+        </h1>
         <p className="text-lg text-gray-600">
           Designed for startup professionals who need to grow fast
         </p>
@@ -212,7 +220,9 @@ const  Others: React.FC = () => {
             {getCurrentFramework().icon}
             <h2 className="text-2xl font-bold">{getCurrentFramework().name}</h2>
           </div>
-          <p className="text-xl opacity-90 mb-2">{getCurrentFramework().subtitle}</p>
+          <p className="text-xl opacity-90 mb-2">
+            {getCurrentFramework().subtitle}
+          </p>
           <p className="opacity-80">{getCurrentFramework().description}</p>
         </div>
 
@@ -221,7 +231,9 @@ const  Others: React.FC = () => {
             <div key={sectionIndex} className="mb-8 last:mb-0">
               <div className="flex items-center gap-3 mb-4">
                 <div className="text-purple-600">{section.icon}</div>
-                <h3 className="text-xl font-semibold text-gray-800">{section.title}</h3>
+                <h3 className="text-xl font-semibold text-gray-800">
+                  {section.title}
+                </h3>
               </div>
 
               <div className="grid gap-3">
@@ -229,7 +241,9 @@ const  Others: React.FC = () => {
                   <div
                     key={itemIndex}
                     className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors group cursor-pointer"
-                    onClick={() => toggleCheck(activeFramework, sectionIndex, itemIndex)}
+                    onClick={() =>
+                      toggleCheck(activeFramework, sectionIndex, itemIndex)
+                    }
                   >
                     <div
                       className={`w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 transition-colors ${
@@ -261,22 +275,25 @@ const  Others: React.FC = () => {
 
       {/* Quick Tips */}
       <div className="mt-8 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-6">
-        <h3 className="font-semibold text-gray-800 mb-3">🚀 Startup-Specific Tips</h3>
+        <h3 className="font-semibold text-gray-800 mb-3">
+          🚀 Startup-Specific Tips
+        </h3>
         <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
           <div>
-            • <strong>Move fast, but be intentional</strong> - Growth without direction wastes
-            precious startup time
+            • <strong>Move fast, but be intentional</strong> - Growth without
+            direction wastes precious startup time
           </div>
           <div>
-            • <strong>Align with business needs</strong> - Your growth should directly impact company
-            success
+            • <strong>Align with business needs</strong> - Your growth should
+            directly impact company success
           </div>
           <div>
-            • <strong>Embrace the chaos</strong> - Use uncertainty as fuel for rapid skill
-            development
+            • <strong>Embrace the chaos</strong> - Use uncertainty as fuel for
+            rapid skill development
           </div>
           <div>
-            • <strong>Build as you climb</strong> - Help others grow while you're growing yourself
+            • <strong>Build as you climb</strong> - Help others grow while
+            you're growing yourself
           </div>
         </div>
       </div>
@@ -285,5 +302,3 @@ const  Others: React.FC = () => {
 };
 
 export default Others;
-
-
