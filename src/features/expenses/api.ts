@@ -57,6 +57,17 @@ export const fetchExpenses = async () => {
     return docs.map((d: any) => d.toJSON());
 };
 
+
+
+// ✅ Read single expense by id
+export const fetchExpenseById = async (id: string) => {
+  const db = await getDb();
+  const doc = await db.expenses.findOne({ selector: { id } }).exec();
+
+  if (!doc) return null; // return null if not found
+  return doc.toJSON();
+};
+
 // ✅ Create new expense
 export const addExpense = async (expense: Expense) => {
     const db = await getDb();

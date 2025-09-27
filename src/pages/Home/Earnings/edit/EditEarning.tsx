@@ -1,11 +1,14 @@
+import { useNavigate, useParams } from "@tanstack/react-router"; // or react-router-dom depending on your setup
+import dayjs from "dayjs";
 import * as React from "react";
 import toast from "react-hot-toast";
-import { useParams, useNavigate } from "@tanstack/react-router"; // or react-router-dom depending on your setup
-import { useEarnings, useUpdateEarning } from "../../../../features/earnings/hooks";
-import { earningZodSchema, updateEarningZodSchema } from "../../../../models/earning";
+import {
+  useEarning,
+  useUpdateEarning,
+} from "../../../../features/earnings/hooks";
+import { updateEarningZodSchema } from "../../../../models/earning";
 import type { EarningFormType } from "../../../../types/types";
 import { handleError } from "../../../../utils/error";
-import dayjs from "dayjs";
 
 /* ✅ Shared UI components */
 import { DatePicker } from "../../../../components/ui/DatePicker";
@@ -17,11 +20,8 @@ const EditEarning: React.FC = () => {
   const { id } = useParams({ strict: false }); // get earning id from URL
   const navigate = useNavigate();
 
-  const { data: earnings, isLoading } = useEarnings();
+  const { data: earning, isLoading, error } = useEarning(id);
   const { mutateAsync: updateEarning } = useUpdateEarning();
-
-  // Find the earning we’re editing
-  const earning = earnings?.find((e) => e.id === id);
 
   const [form, setForm] = React.useState<EarningFormType | null>(null);
 
@@ -37,6 +37,7 @@ const EditEarning: React.FC = () => {
   if (isLoading) {
     return <p>Loading earning...</p>;
   }
+  if (error) return <p>Something went wrong</p>;
 
   if (!earning) {
     return <p>Earning not found.</p>;
@@ -57,14 +58,11 @@ const EditEarning: React.FC = () => {
     try {
       const validatedEarning = await updateEarningZodSchema.parseAsync(form);
 
-      await toast.promise(
-        updateEarning({ id, updates: validatedEarning }),
-        {
-          loading: "Updating earning...",
-          success: "Earning updated successfully 🎉",
-          error: "Failed to update earning. Please try again.",
-        }
-      );
+      await toast.promise(updateEarning({ id, updates: validatedEarning }), {
+        loading: "Updating earning...",
+        success: "Earning updated successfully 🎉",
+        error: "Failed to update earning. Please try again.",
+      });
 
       navigate({ to: "/home/earnings" }); // redirect after update
     } catch (err) {
@@ -106,7 +104,9 @@ const EditEarning: React.FC = () => {
           {/* Date */}
           <FormFieldWrapper label="Date" htmlFor="date">
             <DatePicker
-              value={form.date ? dayjs(form.date, "YYYY-MM-DD").toDate() : undefined}
+              value={
+                form.date ? dayjs(form.date, "YYYY-MM-DD").toDate() : undefined
+              }
               onChange={(day) => {
                 const date = day ? dayjs(day).format("YYYY-MM-DD") : "";
                 setForm({ ...form, date });

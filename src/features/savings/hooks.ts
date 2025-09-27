@@ -5,6 +5,7 @@ import {
   updateSaving,
   deleteSaving,
   fetchSavingAnalytics,
+  fetchSavingById,
 } from "./api";
 import type { Range } from "../../utils/analytics";
 import type { SavingUpdate } from "../../models/saving";
@@ -22,6 +23,18 @@ export const useSavings = () => {
   return useQuery({
     queryKey: ["savings"],
     queryFn: fetchSavings,
+  });
+};
+
+// ✅ Hook to get single saving by id
+export const useSaving = (id: string | undefined) => {
+  return useQuery({
+    queryKey: ["saving", id],
+    queryFn: () => {
+      if (!id) throw new Error("Saving ID is required");
+      return fetchSavingById(id);
+    },
+    enabled: !!id, // only run if id is defined
   });
 };
 

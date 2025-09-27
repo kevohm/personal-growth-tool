@@ -93,3 +93,38 @@ export const RANGE_OPTIONS = [
   { value: "ytd", label: "Year to date" },
   { value: "all", label: "All time" },
 ] as const;
+
+
+/**
+ * Calculate total + % change for a given range
+ */
+export const calculateTotals = (items: any[], field: "amount", range: Range) => {
+  const { start, end } = getDateRange(range);
+
+  // Current range
+  const thisRangeTotal = items
+    .filter((i) => dayjs(i.date).isBetween(start, end, null, "[]"))
+    .reduce((sum, i) => sum + (i[field] || 0), 0);
+
+  // Previous range
+  const duration = end.diff(start, "day") + 1; // inclusive
+  const prevStart = start.subtract(duration, "day");
+  const prevEnd = start.subtract(1, "day");
+
+  const lastRangeTotal = items
+    .filter((i) => dayjs(i.date).isBetween(prevStart, prevEnd, null, "[]"))
+    .reduce((sum, i) => sum + (i[field] || 0), 0);
+
+  // % change
+  const change =
+    lastRangeTotal === 0
+      ? thisRangeTotal > 0
+        ? 100
+        : 0
+      : ((thisRangeTotal - lastRangeTotal) / lastRangeTotal) * 100;
+
+  return {
+    total: thisRangeTotal,
+    change,
+  };
+};

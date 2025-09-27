@@ -1,32 +1,31 @@
 import { createId } from "@paralleldrive/cuid2";
+import dayjs from "dayjs";
 import * as React from "react";
 import toast from "react-hot-toast";
 import { useAddEarning } from "../../../../features/earnings/hooks";
 import { earningZodSchema } from "../../../../models/earning";
 import type { EarningFormType } from "../../../../types/types";
 import { handleError } from "../../../../utils/error";
-import dayjs from "dayjs";
 
 /* ✅ Shared UI components */
+import { useNavigate } from "@tanstack/react-router";
 import { DatePicker } from "../../../../components/ui/DatePicker";
 import { FormFieldWrapper } from "../../../../components/ui/FormFieldWrapper";
 import { Input } from "../../../../components/ui/Input";
-import { Select } from "../../../../components/ui/Select";
 import { Textarea } from "../../../../components/ui/Textarea";
-import { useNavigate } from "@tanstack/react-router";
 
 const defaultBody = {
-    source: "",
-    amount: 0,
-    notes: "",
-    date: "",
-    userId: createId(),
-  }
+  source: "",
+  amount: 0,
+  notes: "",
+  date: "",
+  userId: createId(),
+};
 
 const AddEarning: React.FC = () => {
   const { mutateAsync } = useAddEarning();
   const [form, setForm] = React.useState<EarningFormType>(defaultBody);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -48,7 +47,7 @@ const AddEarning: React.FC = () => {
       });
 
       setForm(defaultBody as EarningFormType);
-      navigate({to:"/home/earnings"})
+      navigate({ to: "/home/earnings" });
     } catch (err) {
       handleError(err);
     }
@@ -115,9 +114,7 @@ const AddEarning: React.FC = () => {
         <div className="flex justify-end gap-3 pt-4">
           <button
             type="reset"
-            onClick={() =>
-              setForm(defaultBody as EarningFormType)
-            }
+            onClick={() => setForm(defaultBody as EarningFormType)}
             className="rounded-lg border border-gray-300 px-4 py-2 text-sm hover:bg-gray-50"
           >
             Reset

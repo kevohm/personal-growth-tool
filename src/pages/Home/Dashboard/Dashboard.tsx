@@ -1,14 +1,38 @@
+import { useState } from "react";
+import { Select } from "../../../components/ui/Select";
+import { RANGE_OPTIONS, type Range } from "../../../utils/analytics";
+import DashboardWidgets from "./components/DashboardWidgets";
 import EarningsChart from "./components/EarningsChart";
-import Widget from "./components/Widget";
 
 const Dashboard = () => {
+  const [range, setRange] = useState<Range>("30d");
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
+  };
+
   return (
-    <div className="h-auto  w-full flex flex-col gap-6  px-6 pb-6 bg-red">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        <Widget title="Total Expenses" amount={9845.2} change={-2.1} />
-        <Widget title="Total Savings" amount={18420.75} change={4.5} />
-        <Widget title="Total Earnings" amount={84849.93} change={6.2} />
+    <div className="h-auto w-full flex flex-col gap-6 px-6 pb-6">
+      {/* Greeting + Range Selector */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h1 className="text-2xl font-semibold text-slate-800">
+          {getGreeting()}, Kevin 👋
+        </h1>
+        <div>
+          <Select
+            placeholder=""
+            value={range}
+            onValueChange={(val) => setRange(val as Range)}
+            options={RANGE_OPTIONS.map((opt) => opt)}
+          />
+        </div>
       </div>
+
+      {/* Pass range to widgets + chart */}
+      <DashboardWidgets range={range} />
       <EarningsChart />
     </div>
   );
