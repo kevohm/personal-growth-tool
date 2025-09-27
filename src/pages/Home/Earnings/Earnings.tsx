@@ -1,126 +1,166 @@
-import React from "react";
+import { PlusIcon } from "@radix-ui/react-icons";
+import { Link, useNavigate } from "@tanstack/react-router";
+import React, { useMemo, useState } from "react";
+import toast from "react-hot-toast";
+
+import { Select } from "../../../components/ui/Select";
 import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  Tooltip,
-  Cell,
-} from "recharts";
+  useDeleteEarning,
+  useEarningAnalytics,
+  useEarnings,
+} from "../../../features/earnings/hooks";
+import type { Earning } from "../../../models/earning";
+import { RANGE_OPTIONS, type Range } from "../../../utils/analytics";
+import { handleError } from "../../../utils/error";
+import { formatCurrency } from "../../../utils/format";
+import AnalyticsChart from "../Dashboard/components/AnalyticsChart";
 
-const expenseData = [
-  { month: "Jan", value: 8200 },
-  { month: "Feb", value: 15400 },
-  { month: "Mar", value: 9400 },
-  { month: "Apr", value: 18300 },
-  { month: "May", value: 12200 },
-  { month: "Jun", value: 21400 },
-  { month: "Jul", value: 13500 },
-  { month: "Aug", value: 9800 },
-  { month: "Sep", value: 11000 },
-  { month: "Oct", value: 14900 },
-  { month: "Nov", value: 8700 },
-  { month: "Dec", value: 17500 },
-];
-
-function formatCurrency(v: number) {
-  return v.toLocaleString("en-KE", {
-    style: "currency",
-    currency: "KES",
-    minimumFractionDigits: 2,
-  });
-}
-
-const CustomTooltip: React.FC<any> = ({ active, payload }) => {
-  if (active && payload && payload.length) {
-    const { value } = payload[0].payload;
-    return (
-      <div className="bg-white shadow-lg rounded-md py-2 px-3 text-sm">
-        <div className="font-medium text-slate-700">Expenses</div>
-        <div className="text-rose-600 font-semibold">{formatCurrency(value)}</div>
+const EmptyState: React.FC = () => {
+  return (
+    <div className="flex flex-col items-center justify-center py-16 text-center">
+      <div className="mb-4 rounded-full bg-emerald-50 p-4">
+        <PlusIcon className="h-6 w-6 text-emerald-600" />
       </div>
-    );
-  }
-  return null;
+      <h3 className="text-lg font-semibold text-slate-800">
+        No earnings recorded
+      </h3>
+      <p className="mt-1 text-slate-500 text-sm">
+        Start tracking your income by adding your first earning.
+      </p>
+    </div>
+  );
 };
 
 const Earnings: React.FC = () => {
+  const { data: earnings } = useEarnings();
+  const [range, setRange] = useState<Range>("30d");
+  const { data } = useEarningAnalytics(range);
+  // console.log(earnings)
+  const navigate = useNavigate();
+  const { mutateAsync: deleteEarning } = useDeleteEarning();
+
+  const analytics = useMemo(() => data || [], [data]);
+
   return (
     <div className="p-6 space-y-8">
-      {/* Graph */}
+      {/* Chart */}
       <div className="bg-white rounded-2xl p-5 shadow-sm">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-slate-800">Monthly Expenses</h2>
-          <select className="text-sm border border-slate-200 rounded-full px-3 py-1">
-            <option>This Year</option>
-            <option>Last 30 days</option>
-            <option>Last Year</option>
-          </select>
+          <h2 className="text-lg font-semibold text-slate-800">Earnings</h2>
+          <div className="w-max">
+            <Select
+              value={range}
+              options={RANGE_OPTIONS.map((opt) => ({
+                value: opt.value,
+                label: opt.label,
+              }))}
+              onValueChange={(val) => setRange(val as Range)}
+            />
+          </div>
         </div>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={expenseData} margin={{ top: 8, right: 16, left: 16, bottom: 0 }}>
-              <defs>
-                <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#f43f5e" stopOpacity={0.9} />
-                  <stop offset="100%" stopColor="#fda4af" stopOpacity={0.3} />
-                </linearGradient>
-              </defs>
 
-              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "#94A3B8" }} />
-              <Tooltip content={<CustomTooltip />} />
-
-              <Bar dataKey="value" radius={[12, 12, 12, 12]} barSize={36} isAnimationActive={false}>
-                {expenseData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill="url(#expenseGradient)" />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        <AnalyticsChart
+          tooltipLabel="Earnings"
+          color={{ base: "#16a34a", light: "#86efac" }}
+          data={analytics}
+          range={range}
+        />
       </div>
 
       {/* Table */}
       <div className="bg-white rounded-2xl p-5 shadow-sm">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-slate-800">Expense Breakdown</h2>
-          <button className="text-sm border border-slate-200 rounded-full px-3 py-1">Filter</button>
+          <h2 className="text-lg font-semibold text-slate-800">
+            Earnings Breakdown
+          </h2>
+
+          <Link
+            to="/home/earnings/add"
+            className="px-4 py-2 flex items-center gap-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition"
+          >
+            <PlusIcon className="w-4 h-4" />
+            <span>Add Earning</span>
+          </Link>
         </div>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
-            <thead className="text-slate-500 border-b border-slate-200">
-              <tr>
-                <th className="py-2">Category</th>
-                <th className="py-2">Date</th>
-                <th className="py-2">Amount</th>
-                <th className="py-2">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              <tr>
-                <td className="py-2 font-medium text-slate-700">Groceries</td>
-                <td className="py-2">12 Sep 2026</td>
-                <td className="py-2 text-rose-600 font-semibold">{formatCurrency(2500)}</td>
-                <td className="py-2 text-emerald-600">Paid</td>
-              </tr>
-              <tr>
-                <td className="py-2 font-medium text-slate-700">Transport</td>
-                <td className="py-2">09 Sep 2026</td>
-                <td className="py-2 text-rose-600 font-semibold">{formatCurrency(800)}</td>
-                <td className="py-2 text-emerald-600">Paid</td>
-              </tr>
-              <tr>
-                <td className="py-2 font-medium text-slate-700">Utilities</td>
-                <td className="py-2">03 Sep 2026</td>
-                <td className="py-2 text-rose-600 font-semibold">{formatCurrency(4200)}</td>
-                <td className="py-2 text-emerald-600">Paid</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+
+        {earnings && Array.isArray(earnings) && earnings?.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-left text-sm">
+              <thead className="text-slate-500 border-b border-slate-200">
+                <tr>
+                  <th className="py-2">Source</th>
+                  <th className="py-2">Date</th>
+                  <th className="py-2">Amount</th>
+                  <th className="py-2">Notes</th>
+                  <th className="py-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {earnings?.map((earning: Earning) => (
+                  <tr key={earning.id}>
+                    <td className="py-2 font-medium text-slate-700">
+                      {earning.source}
+                    </td>
+                    <td className="py-2">{earning.date}</td>
+                    <td className="py-2 text-emerald-600 font-semibold">
+                      {formatCurrency(earning.amount)}
+                    </td>
+                    <td className="py-2 text-slate-400 italic">
+                      {earning?.notes?.trim()
+                        ? earning.notes
+                        : "No notes added"}
+                    </td>
+
+                    <td className="py-2 text-right">
+                      <div className="flex justify-end gap-2">
+                        {/* Edit */}
+                        <button
+                          onClick={() =>
+                            navigate({
+                              to: `/home/earnings/${earning.id}/edit`,
+                            })
+                          }
+                          className="rounded-lg border border-gray-300 px-2 py-1 text-sm text-slate-700 hover:bg-gray-100"
+                        >
+                          Edit
+                        </button>
+
+                        {/* Delete */}
+                        <button
+                          onClick={async () => {
+                            if (
+                              confirm(
+                                "Are you sure you want to delete this earning?"
+                              )
+                            ) {
+                              try {
+                                await toast.promise(deleteEarning(earning.id), {
+                                  loading: "Deleting...",
+                                  success: "Earning deleted",
+                                  error: "Failed to delete",
+                                });
+                              } catch (err) {
+                                handleError(err);
+                              }
+                            }
+                          }}
+                          className="rounded-lg bg-red-600 px-2 py-1 text-sm text-white hover:bg-red-700"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <EmptyState />
+        )}
       </div>
     </div>
   );
 };
 
-export default Earnings
+export default Earnings;

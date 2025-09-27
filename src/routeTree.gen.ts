@@ -12,10 +12,16 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as HomeRouteImport } from './routes/_home'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as HomeHomeIndexRouteImport } from './routes/_home/home/index'
-import { Route as HomeHomeSavingsRouteImport } from './routes/_home/home/savings'
-import { Route as HomeHomeEarningsRouteImport } from './routes/_home/home/earnings'
+import { Route as HomeHomeSavingsIndexRouteImport } from './routes/_home/home/savings/index'
 import { Route as HomeHomeExpensesIndexRouteImport } from './routes/_home/home/expenses/index'
+import { Route as HomeHomeEarningsIndexRouteImport } from './routes/_home/home/earnings/index'
+import { Route as HomeHomeSavingsAddRouteImport } from './routes/_home/home/savings/add'
 import { Route as HomeHomeExpensesAddRouteImport } from './routes/_home/home/expenses/add'
+import { Route as HomeHomeEarningsAddRouteImport } from './routes/_home/home/earnings/add'
+import { Route as HomeHomeExpensesIdIndexRouteImport } from './routes/_home/home/expenses/$id/index'
+import { Route as HomeHomeSavingsIdEditIndexRouteImport } from './routes/_home/home/savings/$id/edit/index'
+import { Route as HomeHomeExpensesIdEditIndexRouteImport } from './routes/_home/home/expenses/$id/edit/index'
+import { Route as HomeHomeEarningsIdEditIndexRouteImport } from './routes/_home/home/earnings/$id/edit/index'
 
 const HomeRoute = HomeRouteImport.update({
   id: '/_home',
@@ -31,14 +37,9 @@ const HomeHomeIndexRoute = HomeHomeIndexRouteImport.update({
   path: '/home/',
   getParentRoute: () => HomeRoute,
 } as any)
-const HomeHomeSavingsRoute = HomeHomeSavingsRouteImport.update({
-  id: '/home/savings',
-  path: '/home/savings',
-  getParentRoute: () => HomeRoute,
-} as any)
-const HomeHomeEarningsRoute = HomeHomeEarningsRouteImport.update({
-  id: '/home/earnings',
-  path: '/home/earnings',
+const HomeHomeSavingsIndexRoute = HomeHomeSavingsIndexRouteImport.update({
+  id: '/home/savings/',
+  path: '/home/savings/',
   getParentRoute: () => HomeRoute,
 } as any)
 const HomeHomeExpensesIndexRoute = HomeHomeExpensesIndexRouteImport.update({
@@ -46,64 +47,138 @@ const HomeHomeExpensesIndexRoute = HomeHomeExpensesIndexRouteImport.update({
   path: '/home/expenses/',
   getParentRoute: () => HomeRoute,
 } as any)
+const HomeHomeEarningsIndexRoute = HomeHomeEarningsIndexRouteImport.update({
+  id: '/home/earnings/',
+  path: '/home/earnings/',
+  getParentRoute: () => HomeRoute,
+} as any)
+const HomeHomeSavingsAddRoute = HomeHomeSavingsAddRouteImport.update({
+  id: '/home/savings/add',
+  path: '/home/savings/add',
+  getParentRoute: () => HomeRoute,
+} as any)
 const HomeHomeExpensesAddRoute = HomeHomeExpensesAddRouteImport.update({
   id: '/home/expenses/add',
   path: '/home/expenses/add',
   getParentRoute: () => HomeRoute,
 } as any)
+const HomeHomeEarningsAddRoute = HomeHomeEarningsAddRouteImport.update({
+  id: '/home/earnings/add',
+  path: '/home/earnings/add',
+  getParentRoute: () => HomeRoute,
+} as any)
+const HomeHomeExpensesIdIndexRoute = HomeHomeExpensesIdIndexRouteImport.update({
+  id: '/home/expenses/$id/',
+  path: '/home/expenses/$id/',
+  getParentRoute: () => HomeRoute,
+} as any)
+const HomeHomeSavingsIdEditIndexRoute =
+  HomeHomeSavingsIdEditIndexRouteImport.update({
+    id: '/home/savings/$id/edit/',
+    path: '/home/savings/$id/edit/',
+    getParentRoute: () => HomeRoute,
+  } as any)
+const HomeHomeExpensesIdEditIndexRoute =
+  HomeHomeExpensesIdEditIndexRouteImport.update({
+    id: '/home/expenses/$id/edit/',
+    path: '/home/expenses/$id/edit/',
+    getParentRoute: () => HomeRoute,
+  } as any)
+const HomeHomeEarningsIdEditIndexRoute =
+  HomeHomeEarningsIdEditIndexRouteImport.update({
+    id: '/home/earnings/$id/edit/',
+    path: '/home/earnings/$id/edit/',
+    getParentRoute: () => HomeRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/home/earnings': typeof HomeHomeEarningsRoute
-  '/home/savings': typeof HomeHomeSavingsRoute
   '/home': typeof HomeHomeIndexRoute
+  '/home/earnings/add': typeof HomeHomeEarningsAddRoute
   '/home/expenses/add': typeof HomeHomeExpensesAddRoute
+  '/home/savings/add': typeof HomeHomeSavingsAddRoute
+  '/home/earnings': typeof HomeHomeEarningsIndexRoute
   '/home/expenses': typeof HomeHomeExpensesIndexRoute
+  '/home/savings': typeof HomeHomeSavingsIndexRoute
+  '/home/expenses/$id': typeof HomeHomeExpensesIdIndexRoute
+  '/home/earnings/$id/edit': typeof HomeHomeEarningsIdEditIndexRoute
+  '/home/expenses/$id/edit': typeof HomeHomeExpensesIdEditIndexRoute
+  '/home/savings/$id/edit': typeof HomeHomeSavingsIdEditIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/home/earnings': typeof HomeHomeEarningsRoute
-  '/home/savings': typeof HomeHomeSavingsRoute
   '/home': typeof HomeHomeIndexRoute
+  '/home/earnings/add': typeof HomeHomeEarningsAddRoute
   '/home/expenses/add': typeof HomeHomeExpensesAddRoute
+  '/home/savings/add': typeof HomeHomeSavingsAddRoute
+  '/home/earnings': typeof HomeHomeEarningsIndexRoute
   '/home/expenses': typeof HomeHomeExpensesIndexRoute
+  '/home/savings': typeof HomeHomeSavingsIndexRoute
+  '/home/expenses/$id': typeof HomeHomeExpensesIdIndexRoute
+  '/home/earnings/$id/edit': typeof HomeHomeEarningsIdEditIndexRoute
+  '/home/expenses/$id/edit': typeof HomeHomeExpensesIdEditIndexRoute
+  '/home/savings/$id/edit': typeof HomeHomeSavingsIdEditIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_home': typeof HomeRouteWithChildren
-  '/_home/home/earnings': typeof HomeHomeEarningsRoute
-  '/_home/home/savings': typeof HomeHomeSavingsRoute
   '/_home/home/': typeof HomeHomeIndexRoute
+  '/_home/home/earnings/add': typeof HomeHomeEarningsAddRoute
   '/_home/home/expenses/add': typeof HomeHomeExpensesAddRoute
+  '/_home/home/savings/add': typeof HomeHomeSavingsAddRoute
+  '/_home/home/earnings/': typeof HomeHomeEarningsIndexRoute
   '/_home/home/expenses/': typeof HomeHomeExpensesIndexRoute
+  '/_home/home/savings/': typeof HomeHomeSavingsIndexRoute
+  '/_home/home/expenses/$id/': typeof HomeHomeExpensesIdIndexRoute
+  '/_home/home/earnings/$id/edit/': typeof HomeHomeEarningsIdEditIndexRoute
+  '/_home/home/expenses/$id/edit/': typeof HomeHomeExpensesIdEditIndexRoute
+  '/_home/home/savings/$id/edit/': typeof HomeHomeSavingsIdEditIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/home/earnings'
-    | '/home/savings'
     | '/home'
+    | '/home/earnings/add'
     | '/home/expenses/add'
+    | '/home/savings/add'
+    | '/home/earnings'
     | '/home/expenses'
+    | '/home/savings'
+    | '/home/expenses/$id'
+    | '/home/earnings/$id/edit'
+    | '/home/expenses/$id/edit'
+    | '/home/savings/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/home/earnings'
-    | '/home/savings'
     | '/home'
+    | '/home/earnings/add'
     | '/home/expenses/add'
+    | '/home/savings/add'
+    | '/home/earnings'
     | '/home/expenses'
+    | '/home/savings'
+    | '/home/expenses/$id'
+    | '/home/earnings/$id/edit'
+    | '/home/expenses/$id/edit'
+    | '/home/savings/$id/edit'
   id:
     | '__root__'
     | '/'
     | '/_home'
-    | '/_home/home/earnings'
-    | '/_home/home/savings'
     | '/_home/home/'
+    | '/_home/home/earnings/add'
     | '/_home/home/expenses/add'
+    | '/_home/home/savings/add'
+    | '/_home/home/earnings/'
     | '/_home/home/expenses/'
+    | '/_home/home/savings/'
+    | '/_home/home/expenses/$id/'
+    | '/_home/home/earnings/$id/edit/'
+    | '/_home/home/expenses/$id/edit/'
+    | '/_home/home/savings/$id/edit/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -134,18 +209,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeHomeIndexRouteImport
       parentRoute: typeof HomeRoute
     }
-    '/_home/home/savings': {
-      id: '/_home/home/savings'
+    '/_home/home/savings/': {
+      id: '/_home/home/savings/'
       path: '/home/savings'
       fullPath: '/home/savings'
-      preLoaderRoute: typeof HomeHomeSavingsRouteImport
-      parentRoute: typeof HomeRoute
-    }
-    '/_home/home/earnings': {
-      id: '/_home/home/earnings'
-      path: '/home/earnings'
-      fullPath: '/home/earnings'
-      preLoaderRoute: typeof HomeHomeEarningsRouteImport
+      preLoaderRoute: typeof HomeHomeSavingsIndexRouteImport
       parentRoute: typeof HomeRoute
     }
     '/_home/home/expenses/': {
@@ -155,6 +223,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeHomeExpensesIndexRouteImport
       parentRoute: typeof HomeRoute
     }
+    '/_home/home/earnings/': {
+      id: '/_home/home/earnings/'
+      path: '/home/earnings'
+      fullPath: '/home/earnings'
+      preLoaderRoute: typeof HomeHomeEarningsIndexRouteImport
+      parentRoute: typeof HomeRoute
+    }
+    '/_home/home/savings/add': {
+      id: '/_home/home/savings/add'
+      path: '/home/savings/add'
+      fullPath: '/home/savings/add'
+      preLoaderRoute: typeof HomeHomeSavingsAddRouteImport
+      parentRoute: typeof HomeRoute
+    }
     '/_home/home/expenses/add': {
       id: '/_home/home/expenses/add'
       path: '/home/expenses/add'
@@ -162,23 +244,70 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeHomeExpensesAddRouteImport
       parentRoute: typeof HomeRoute
     }
+    '/_home/home/earnings/add': {
+      id: '/_home/home/earnings/add'
+      path: '/home/earnings/add'
+      fullPath: '/home/earnings/add'
+      preLoaderRoute: typeof HomeHomeEarningsAddRouteImport
+      parentRoute: typeof HomeRoute
+    }
+    '/_home/home/expenses/$id/': {
+      id: '/_home/home/expenses/$id/'
+      path: '/home/expenses/$id'
+      fullPath: '/home/expenses/$id'
+      preLoaderRoute: typeof HomeHomeExpensesIdIndexRouteImport
+      parentRoute: typeof HomeRoute
+    }
+    '/_home/home/savings/$id/edit/': {
+      id: '/_home/home/savings/$id/edit/'
+      path: '/home/savings/$id/edit'
+      fullPath: '/home/savings/$id/edit'
+      preLoaderRoute: typeof HomeHomeSavingsIdEditIndexRouteImport
+      parentRoute: typeof HomeRoute
+    }
+    '/_home/home/expenses/$id/edit/': {
+      id: '/_home/home/expenses/$id/edit/'
+      path: '/home/expenses/$id/edit'
+      fullPath: '/home/expenses/$id/edit'
+      preLoaderRoute: typeof HomeHomeExpensesIdEditIndexRouteImport
+      parentRoute: typeof HomeRoute
+    }
+    '/_home/home/earnings/$id/edit/': {
+      id: '/_home/home/earnings/$id/edit/'
+      path: '/home/earnings/$id/edit'
+      fullPath: '/home/earnings/$id/edit'
+      preLoaderRoute: typeof HomeHomeEarningsIdEditIndexRouteImport
+      parentRoute: typeof HomeRoute
+    }
   }
 }
 
 interface HomeRouteChildren {
-  HomeHomeEarningsRoute: typeof HomeHomeEarningsRoute
-  HomeHomeSavingsRoute: typeof HomeHomeSavingsRoute
   HomeHomeIndexRoute: typeof HomeHomeIndexRoute
+  HomeHomeEarningsAddRoute: typeof HomeHomeEarningsAddRoute
   HomeHomeExpensesAddRoute: typeof HomeHomeExpensesAddRoute
+  HomeHomeSavingsAddRoute: typeof HomeHomeSavingsAddRoute
+  HomeHomeEarningsIndexRoute: typeof HomeHomeEarningsIndexRoute
   HomeHomeExpensesIndexRoute: typeof HomeHomeExpensesIndexRoute
+  HomeHomeSavingsIndexRoute: typeof HomeHomeSavingsIndexRoute
+  HomeHomeExpensesIdIndexRoute: typeof HomeHomeExpensesIdIndexRoute
+  HomeHomeEarningsIdEditIndexRoute: typeof HomeHomeEarningsIdEditIndexRoute
+  HomeHomeExpensesIdEditIndexRoute: typeof HomeHomeExpensesIdEditIndexRoute
+  HomeHomeSavingsIdEditIndexRoute: typeof HomeHomeSavingsIdEditIndexRoute
 }
 
 const HomeRouteChildren: HomeRouteChildren = {
-  HomeHomeEarningsRoute: HomeHomeEarningsRoute,
-  HomeHomeSavingsRoute: HomeHomeSavingsRoute,
   HomeHomeIndexRoute: HomeHomeIndexRoute,
+  HomeHomeEarningsAddRoute: HomeHomeEarningsAddRoute,
   HomeHomeExpensesAddRoute: HomeHomeExpensesAddRoute,
+  HomeHomeSavingsAddRoute: HomeHomeSavingsAddRoute,
+  HomeHomeEarningsIndexRoute: HomeHomeEarningsIndexRoute,
   HomeHomeExpensesIndexRoute: HomeHomeExpensesIndexRoute,
+  HomeHomeSavingsIndexRoute: HomeHomeSavingsIndexRoute,
+  HomeHomeExpensesIdIndexRoute: HomeHomeExpensesIdIndexRoute,
+  HomeHomeEarningsIdEditIndexRoute: HomeHomeEarningsIdEditIndexRoute,
+  HomeHomeExpensesIdEditIndexRoute: HomeHomeExpensesIdEditIndexRoute,
+  HomeHomeSavingsIdEditIndexRoute: HomeHomeSavingsIdEditIndexRoute,
 }
 
 const HomeRouteWithChildren = HomeRoute._addFileChildren(HomeRouteChildren)

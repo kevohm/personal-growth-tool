@@ -17,16 +17,25 @@ export interface Saving {
   userId: string;
   amount: number;
   goal: string;
-  createdAt: string;
+  notes?: string;
+  category?: string;   // e.g., "emergency", "retirement"
+  source?: string;     // e.g., "salary", "gift"
+  recurring?: boolean; // whether this is recurring
+  tags?: string[];     // custom tags
 }
+
+export type SavingFormType = Partial<Omit<Saving, "id" | "userId">>;
+
 
 export interface Earning {
   id: string;
   userId: string;
   amount: number;
   source: string;
-  createdAt: string;
+  notes?: string;
+  date: string;
 }
+export type EarningFormType = Pick<Earning, "amount" | "userId" | "source" | "notes" | "date">
 
 export interface User {
   id: string;

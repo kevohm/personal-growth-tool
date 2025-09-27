@@ -6,8 +6,9 @@ export const Select: React.FC<{
   onValueChange: (val: string) => void;
   options: { value: string; label: string }[];
   placeholder?: string;
-}> = ({ value, onValueChange, options, placeholder }) => (
-  <SelectPrimitive.Root value={value} onValueChange={onValueChange}>
+  contentClassName?:string;
+}> = ({ value, onValueChange, options, placeholder, contentClassName }) => (
+  <SelectPrimitive.Root value={value} onValueChange={onValueChange}  >
     <SelectPrimitive.Trigger
       className="flex w-full items-center justify-between gap-2 rounded-lg bg-white border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
       aria-label="Select option"
@@ -19,7 +20,7 @@ export const Select: React.FC<{
     </SelectPrimitive.Trigger>
 
     <SelectPrimitive.Portal  >
-      <SelectPrimitive.Content style={{zIndex:1000}}  className="rounded-lg border border-gray-200 bg-white shadow-lg">
+      <SelectPrimitive.Content  style={{zIndex:1000}}  className={`rounded-lg border border-gray-200 bg-white shadow-lg ${contentClassName}`}>
         <SelectPrimitive.Viewport className="p-1">
           {options.map((opt) => (
             <SelectPrimitive.Item
