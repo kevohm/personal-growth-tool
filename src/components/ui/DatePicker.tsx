@@ -1,7 +1,7 @@
 "use client";
 
 import * as Popover from "@radix-ui/react-popover";
-import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import * as React from "react";
 import { DayPicker, type DropdownProps } from "react-day-picker";
 import { Select } from "./Select";
@@ -32,7 +32,6 @@ export function CustomSelectDropdown(props: DropdownProps) {
     />
   );
 }
-
 
 export const DatePicker: React.FC<{
   value: Date | undefined;
@@ -84,11 +83,12 @@ export const DatePicker: React.FC<{
               head_row: "text-xs text-gray-500 font-medium",
               day_button:
                 "transition hover:bg-green-100 p-2 px-3 rounded-xl focus:outline-none ",
-              selected: "bg-green-500/20 text-green-700 font-medium rounded-xl hover:bg-green-500/25",
+              selected:
+                "bg-green-500/20 text-green-700 font-medium rounded-xl hover:bg-green-500/25",
               today: "font-semibold text-green-600 ",
             }}
             components={{
-              Dropdown: CustomSelectDropdown
+              Dropdown: CustomSelectDropdown,
             }}
           />
         </Popover.Content>
