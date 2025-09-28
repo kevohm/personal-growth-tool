@@ -26,6 +26,7 @@
     "dayjs": "^1.11.18",
     "dexie": "^4.2.0",
     "dexie-react-hooks": "^4.2.0",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.541.0",
     "motion": "^12.23.22",
     "pouchdb-adapter-http": "^9.0.0",
