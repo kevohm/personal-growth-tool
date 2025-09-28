@@ -94,11 +94,15 @@ export const RANGE_OPTIONS = [
   { value: "all", label: "All time" },
 ] as const;
 
+export type TotalsResult = {
+  total: number;
+  change: number;
+};
 
 /**
  * Calculate total + % change for a given range
  */
-export const calculateTotals = (items: any[], field: "amount", range: Range) => {
+export const calculateTotals = (items: any[], field: "amount", range: Range):TotalsResult => {
   const { start, end } = getDateRange(range);
 
   // Current range

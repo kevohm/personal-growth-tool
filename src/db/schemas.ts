@@ -11,13 +11,16 @@ export const userSchema = {
   primaryKey: "id",
   type: "object",
   properties: {
-    ...baseSchema, // could be UUID
+    ...baseSchema, // UUID
     email: { type: "string" },
-    password: { type: "string" }, // hash in real apps
-    name: { type: "string" }
+    password: { type: "string" }, // hashed later
+    name: { type: "string" },
+    isGuest: { type: "boolean", default: false },
+    linkedUserId: { type: "string" }, // when guest later logs in
   },
-  required: ["id", "email", "password", "name"]
+  required: ["id", "name"],
 };
+
 
 export const expenseSchema = {
   title: "expense schema",

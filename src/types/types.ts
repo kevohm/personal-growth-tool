@@ -40,8 +40,10 @@ export type EarningFormType = Pick<Earning, "amount" | "userId" | "source" | "no
 
 export interface User {
   id: string;
-  name: string;
-  email: string;
-  passwordHash: string;
-  createdAt: string;
+  name?: string;
+  email?: string;
+  password?: string;
+  isGuest?: boolean,
+  linkedUserId?: string, 
 }
+
