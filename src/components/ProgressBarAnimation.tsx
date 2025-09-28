@@ -1,6 +1,6 @@
 // ProgressBarAnimation.tsx
-import React from "react";
 import Lottie from "lottie-react";
+import React from "react";
 import progressBarAnimation from "../assets/loading-animation.json";
 
 const ProgressBarAnimation: React.FC = () => {

@@ -1,19 +1,46 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { useCurrentUser } from "../features/auth/hooks";
+import React from "react";
 import ProgressBarAnimation from "../components/ProgressBarAnimation";
+import { useCurrentUser } from "../features/auth/hooks";
+import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
 const RootLayout = () => {
-  const { data: user, isLoading } = useCurrentUser();
-  console.log(user)
-  if (isLoading) return <div className="h-screen w-full flex items-center justify-center">
-    <ProgressBarAnimation/>
-  </div>
+const texts = [
+  "Track your spending in real-time",
+  "Get smart insights instantly",
+  "Manage business & personal finances",
+  "Visualize expenses with charts",
+  "Stay on top of payments & reminders",
+  "Grow your savings effortlessly",
+  "Designed for both individuals & SMEs",
+];
 
-  return <>
+  const { data: user, isLoading } = useCurrentUser();
+
+  const [index, setIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % texts.length);
+    }, 2000); // change every 1s
+    return () => clearInterval(interval);
+  }, []);
+
+  // console.log(user);
+  if (isLoading )
+    return (
+      <div className="min-h-screen bg-white w-full flex flex-col  items-center justify-center">
+          <ProgressBarAnimation />
+          <p className="text-slate-950 text-lg font-semibold transition-opacity duration-500">
+            {texts[index]}
+          </p>
+      </div>
+    );
+
+      return <>
     <Outlet />
     <TanStackRouterDevtools />
   </>
-}
+};
 
 export const Route = createRootRoute({ component: RootLayout });
