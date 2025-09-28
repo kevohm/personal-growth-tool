@@ -1,23 +1,27 @@
 "use client";
 
-import { Link, Outlet } from "@tanstack/react-router";
-import * as React from "react";
-import { motion, AnimatePresence } from "motion/react";
 import {
-  HomeIcon,
-  BarChartIcon,
-  PieChartIcon,
   BackpackIcon,
-  ExitIcon,
-  HamburgerMenuIcon,
-  Cross1Icon,
+  BarChartIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  Cross1Icon,
+  ExitIcon,
+  HamburgerMenuIcon,
+  HomeIcon,
+  PieChartIcon,
 } from "@radix-ui/react-icons";
+import { Link, Outlet, useNavigate } from "@tanstack/react-router";
+import { AnimatePresence, motion } from "motion/react";
+import * as React from "react";
+import toast from "react-hot-toast";
+import { useLogout } from "../../features/auth/hooks";
 
 const HomeWrapper = () => {
   const [collapsed, setCollapsed] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const { mutateAsync } = useLogout();
+  const navigate = useNavigate()
 
   const links = [
     { title: "Dashboard", href: "/home", icon: HomeIcon },
@@ -32,7 +36,7 @@ const HomeWrapper = () => {
       <div className="md:hidden absolute top-0 left-0 w-full backdrop-blur-lg  flex items-center justify-between p-4 bg-white/50 border-b border-gray-200">
         <div className="font-bold text-green-600 text-lg">MonyTrack+</div>
         <button onClick={() => setMobileOpen(true)}>
-            <HamburgerMenuIcon className="h-6 w-6" />
+          <HamburgerMenuIcon className="h-6 w-6" />
         </button>
       </div>
 
@@ -90,8 +94,19 @@ const HomeWrapper = () => {
         </nav>
 
         {/* Logout */}
+
         <div className="px-2 py-4 border-t border-gray-100">
-          <button className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors duration-200">
+          <button
+            onClick={async () => {
+              await toast.promise(mutateAsync(), {
+                loading: "Logging out...",
+                success: "Logged out successfully 👋",
+                error: "Failed to logout. Please try again.",
+              });
+              navigate({to:"/auth"})
+            }}
+            className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors duration-200"
+          >
             <ExitIcon className="h-5 w-5" />
             {!collapsed && (
               <motion.span
@@ -119,7 +134,9 @@ const HomeWrapper = () => {
               className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg flex flex-col z-50"
             >
               <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
-                <div className="font-bold text-green-600 text-lg">MonyTrack+</div>
+                <div className="font-bold text-green-600 text-lg">
+                  MonyTrack+
+                </div>
                 <button onClick={() => setMobileOpen(false)}>
                   <Cross1Icon className="h-6 w-6" />
                 </button>
@@ -148,7 +165,16 @@ const HomeWrapper = () => {
 
               <div className="px-2 py-4 border-t border-gray-100">
                 <button
-                  onClick={() => setMobileOpen(false)}
+                  onClick={async () => {
+                    await toast.promise(mutateAsync(), {
+                      loading: "Logging out...",
+                      success: "Logged out successfully 👋",
+                      error: "Failed to logout. Please try again.",
+                    });
+                    setMobileOpen(false);
+                    navigate({to:"/auth"})
+
+                  }}
                   className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors duration-200"
                 >
                   <ExitIcon className="h-5 w-5" />

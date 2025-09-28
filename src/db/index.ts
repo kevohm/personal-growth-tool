@@ -1,6 +1,6 @@
 // db.ts
 import type { RxCollection, RxDatabase } from "rxdb";
-import { createRxDatabase } from "rxdb";
+import { createRxDatabase, removeRxDatabase } from "rxdb";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { earningSchema, expenseSchema, savingSchema, userSchema } from "./schemas";
 // 🔹 Optional: dev-mode plugin for debugging

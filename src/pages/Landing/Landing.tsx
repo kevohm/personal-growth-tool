@@ -7,6 +7,7 @@ import {
   Users,
   CreditCard,
 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 const features = [
   {
@@ -48,12 +49,12 @@ const Landing: React.FC = () => {
       <header className="w-full max-w-6xl flex justify-between items-center p-6">
         <h1 className="text-2xl font-bold">MonyTrack+</h1>
         <div className="flex items-center gap-4">
-          <button className="bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:shadow">
+          <Link to="/auth" className="bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:shadow">
             Login
-          </button>
-          <button className="bg-green-500 px-4 py-2 rounded-lg font-semibold hover:bg-green-600">
+          </Link>
+          <Link to="/auth/signup" className="bg-green-500 px-4 py-2 rounded-lg font-semibold hover:bg-green-600">
             Sign Up
-          </button>
+          </Link>
         </div>
       </header>
 

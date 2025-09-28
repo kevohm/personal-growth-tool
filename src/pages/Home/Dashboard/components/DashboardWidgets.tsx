@@ -1,22 +1,13 @@
 import React from "react";
-import {
-  useEarningSummary,
-  useExpenseSummary,
-  useSavingSummary,
-} from "../../../../features/analytics/hooks"; // adjust path
-import type { Range } from "../../../../utils/analytics";
+import type { Range, TotalsResult } from "../../../../utils/analytics";
 import Widget from "./Widget";
 
-const DashboardWidgets: React.FC<{ range?: Range }> = ({ range = "30d" }) => {
-  const { data: expenseSummary, isLoading: loadingExpenses } =
-    useExpenseSummary(range);
-  const { data: savingSummary, isLoading: loadingSavings } =
-    useSavingSummary(range);
-  const { data: earningSummary, isLoading: loadingEarnings } =
-    useEarningSummary(range);
-    if(loadingEarnings || loadingSavings || loadingExpenses){
-      return <div>loadin...</div>
-    }
+const DashboardWidgets: React.FC<{
+  range?: Range;
+  expenseSummary?: TotalsResult;
+  savingSummary?: TotalsResult;
+  earningSummary?: TotalsResult;
+}> = ({ range = "30d", expenseSummary, savingSummary, earningSummary }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
       <Widget
