@@ -18,6 +18,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     await toast.promise(login(form), {
       loading: "Logging in...",
       success: "Welcome back 👋",
