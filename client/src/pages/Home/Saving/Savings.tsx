@@ -9,11 +9,12 @@ import {
   useSavingAnalytics,
   useSavings,
 } from "../../../features/savings/hooks";
-import type { Saving } from "../../../models/saving";
+import type { Saving } from "../../../types/types";
 import { RANGE_OPTIONS, type Range } from "../../../utils/analytics";
 import { handleError } from "../../../utils/error";
 import { formatCurrency } from "../../../utils/format";
 import AnalyticsChart from "../Dashboard/components/AnalyticsChart";
+import { useAuth } from "../../../hooks/useAuth";
 
 export const EmptyState: React.FC = () => {
   return (
@@ -30,7 +31,8 @@ export const EmptyState: React.FC = () => {
 };
 
 const Savings: React.FC = () => {
-  const { data: savings } = useSavings();
+  const {user} = useAuth()
+  const { data: savings } = useSavings({userId:user?.id}, {enabled:!!user?.id});
   const [range, setRange] = useState<Range>("30d");
   const { data: analytics } = useSavingAnalytics(range);
 

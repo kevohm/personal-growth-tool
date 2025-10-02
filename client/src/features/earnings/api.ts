@@ -14,9 +14,9 @@ import {
 } from "../../utils/analytics";
 
 // ✅ Read all earnings
-export const fetchEarnings = async () => {
+export const fetchEarnings = async (params?:{userId?:string}) => {
   const db = await getDb();
-  const docs = await db.earnings.find().exec();
+  const docs = await db.earnings.find({selector:params}).exec();
   return docs.map((d: any) => d.toJSON());
 };
 // ✅ Read single earning

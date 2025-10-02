@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, type UseQueryOptions } from "@tanstack/react-query";
 import {
   fetchSavings,
   addSaving,
@@ -9,6 +9,7 @@ import {
 } from "./api";
 import type { Range } from "../../utils/analytics";
 import type { SavingUpdate } from "../../models/saving";
+import type { Saving } from "../../types/types";
 
 // ✅ Hook to get saving analytics
 export const useSavingAnalytics = (range: Range) => {
@@ -19,10 +20,11 @@ export const useSavingAnalytics = (range: Range) => {
 };
 
 // ✅ Hook to get savings
-export const useSavings = () => {
+export const useSavings = (params?:{userId?:string},options?:Omit<UseQueryOptions<Saving[], Error>, "queryKey" | "queryFn">) => {
   return useQuery({
     queryKey: ["savings"],
-    queryFn: fetchSavings,
+    queryFn: ()=>fetchSavings(params),
+    ...options
   });
 };
 

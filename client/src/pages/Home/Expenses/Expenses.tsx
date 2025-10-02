@@ -14,6 +14,7 @@ import { RANGE_OPTIONS, type Range } from "../../../utils/analytics";
 import { handleError } from "../../../utils/error";
 import { formatCurrency } from "../../../utils/format";
 import AnalyticsChart from "../Dashboard/components/AnalyticsChart";
+import { useAuth } from "../../../hooks/useAuth";
 
 export const EmptyState: React.FC = () => {
   return (
@@ -30,7 +31,8 @@ export const EmptyState: React.FC = () => {
 };
 
 const Expenses: React.FC = () => {
-  const { data: expenses } = useExpenses();
+  const {user} = useAuth()
+  const { data: expenses } = useExpenses({userId:user?.id}, {enabled:!!user?.id});
   const [range, setRange] = useState<Range>("30d");
   const { data } = useExpenseAnalytics(range);
 

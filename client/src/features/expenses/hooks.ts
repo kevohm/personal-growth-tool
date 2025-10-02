@@ -1,5 +1,6 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, type UseQueryOptions, type UseQueryResult } from "@tanstack/react-query";
 import type { ExpenseUpdate } from "../../models/expense";
+import type { Expense } from "../../types/types";
 import type { Range } from "../../utils/analytics";
 import { addExpense, deleteExpense, fetchExpenseAnalytics, fetchExpenseById, fetchExpenses, updateExpense } from "./api";
 
@@ -12,10 +13,11 @@ export const useExpenseAnalytics = (range: Range) => {
 };
 
 // ✅ Hook to get expenses
-export const useExpenses = () => {
-  return useQuery({
+export const useExpenses = (params?: { userId?: string }, options?: Omit<UseQueryOptions<Expense[], Error>, "queryKey" | "queryFn">): UseQueryResult<Expense[], Error> => {
+  return useQuery<Expense[], Error>({
     queryKey: ["expenses"],
-    queryFn: fetchExpenses,
+    queryFn: () => fetchExpenses(params),
+    ...options
   });
 };
 

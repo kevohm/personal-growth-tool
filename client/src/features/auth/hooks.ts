@@ -2,12 +2,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { User } from "../../models/user";
 import { setTokens } from "../axios";
-import { createGuest, initUser, login, loginAsGuest, logout, setCurrentUserId, signup } from "./api";
+import { createGuest, getCurrentUser, login, loginAsGuest, logout, setCurrentUserId, signup } from "./api";
 
 export const useCurrentUser = () => {
     return useQuery({
         queryKey: ["currentUser"],
-        queryFn: initUser,
+        queryFn: getCurrentUser,
     });
 };
 

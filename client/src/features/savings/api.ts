@@ -53,9 +53,9 @@ export const fetchSavingAnalytics = async (range: Range = "30d") => {
 };
 
 // ✅ Read all savings
-export const fetchSavings = async () => {
+export const fetchSavings = async (params?:{userId?:string}) => {
   const db = await getDb();
-  const docs = await db.savings.find().exec();
+  const docs = await db.savings.find({selector:params}).exec();
   return docs.map((d:any) => d.toJSON());
 };
 
