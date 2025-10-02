@@ -1,7 +1,8 @@
 import express from "express";
 import {
- AuthController
+    AuthController
 } from "../controllers/auth.controller";
+import { requireAuth } from "../middleware/auth.middleware";
 
 const router = express.Router();
 
@@ -22,5 +23,7 @@ router.post("/forgot", AuthController.requestPasswordReset);
 
 // POST /api/auth/reset
 router.post("/reset", AuthController.resetPassword);
+
+router.get("/me", requireAuth, AuthController.me);
 
 export default router;

@@ -2,137 +2,122 @@ import argon2 from "argon2";
 import crypto from "crypto";
 import dayjs from "dayjs";
 import jwt from "jsonwebtoken";
-import { prisma } from "../db";
+
+import {
+  ACCESS_SECRET,
+  APP_URL,
+  REFRESH_EXP_DAYS,
+  REFRESH_SECRET,
+  RESET_TOKEN_EXP_MIN,
+} from "../config";
+
 import { sendResetEmail } from "../utils/mailer.utils";
+import { signAccessToken, signRefreshToken } from "../utils/auth.utils";
 
-const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET!;
-const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!;
-const ACCESS_EXP = process.env.ACCESS_TOKEN_EXPIRY || "15m";
-const REFRESH_EXP_DAYS = Number(process.env.REFRESH_TOKEN_EXPIRY_DAYS || 7);
-const RESET_TOKEN_EXP_MIN = Number(process.env.RESET_TOKEN_EXPIRY_MINUTES || 60);
-const APP_URL = process.env.APP_URL || "http://localhost:4000";
+import { UserRepository } from "../repository/user.repository";
+import { RefreshTokenRepository } from "../repository/refresh.token.repository";
+import { ResetTokenRepository } from "../repository/reset.token.repository";
 
-function signAccessToken(userId: string) {
-    return jwt.sign({ id: userId }, ACCESS_SECRET, { expiresIn: "3h" });
-}
-function signRefreshToken(userId: string) {
-    return jwt.sign({ id: userId }, REFRESH_SECRET, { expiresIn: "6h" });
-}
+const userRepo = new UserRepository();
+const refreshRepo = new RefreshTokenRepository();
+const resetRepo = new ResetTokenRepository();
 
 export const AuthService = {
-    async signup(email: string, password: string, name: string) {
-        const existing = await prisma.user.findUnique({ where: { email } });
-        if (existing) throw new Error("User already exists");
+  async signup(email: string, password: string, name: string) {
+    const existing = await userRepo.getUserByEmail(email);
+    if (existing) throw new Error("User already exists");
 
-        const passwordHash = await argon2.hash(password);
-        const user = await prisma.user.create({ data: { email, passwordHash, name } });
+    const passwordHash = await argon2.hash(password);
+    const user = await userRepo.createUser(email, passwordHash, name);
 
-        const accessToken = signAccessToken(user.id);
-        const refreshToken = signRefreshToken(user.id);
-        const refreshExpiry = dayjs().add(REFRESH_EXP_DAYS, "day").toDate();
+    const accessToken = signAccessToken(user.id);
+    const refreshToken = signRefreshToken(user.id);
+    const refreshExpiry = dayjs().add(REFRESH_EXP_DAYS, "day").toDate();
 
-        await prisma.refreshToken.create({
-            data: { token: refreshToken, userId: user.id, expiresAt: refreshExpiry },
-        });
+    await refreshRepo.createToken(user.id, refreshToken, refreshExpiry);
 
-        return { user, accessToken, refreshToken };
-    },
+    return { user, accessToken, refreshToken };
+  },
 
-    async login(email: string, password: string) {
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (!user) throw new Error("Invalid credentials");
+  async login(email: string, password: string) {
+    const user = await userRepo.getUserByEmail(email);
+    if (!user) throw new Error("Invalid credentials");
 
-        const ok = await argon2.verify(user.passwordHash, password);
-        if (!ok) throw new Error("Invalid credentials");
+    const ok = await argon2.verify(user.passwordHash, password);
+    if (!ok) throw new Error("Invalid credentials");
 
-        const accessToken = signAccessToken(user.id);
-        const refreshToken = signRefreshToken(user.id);
-        const refreshExpiry = dayjs().add(REFRESH_EXP_DAYS, "day").toDate();
+    const accessToken = signAccessToken(user.id);
+    const refreshToken = signRefreshToken(user.id);
+    const refreshExpiry = dayjs().add(REFRESH_EXP_DAYS, "day").toDate();
 
-        await prisma.refreshToken.create({
-            data: { token: refreshToken, userId: user.id, expiresAt: refreshExpiry },
-        });
+    await refreshRepo.createToken(user.id, refreshToken, refreshExpiry);
 
-        return { user, accessToken, refreshToken };
-    },
+    return { user, accessToken, refreshToken };
+  },
 
+  async refresh(oldToken: string) {
+    const stored = await refreshRepo.getToken(oldToken);
 
-    async refresh(oldToken: string) {
-        const stored = await prisma.refreshToken.findUnique({
-            where: { token: oldToken },
-        });
+    if (!stored || stored.revoked) throw new Error("Invalid refresh token");
+    if (new Date(stored.expiresAt) < new Date()) throw new Error("Refresh token expired");
 
-        if (!stored || stored.revoked) {
-            throw new Error("Invalid refresh token");
-        }
+    const payload = jwt.verify(oldToken, REFRESH_SECRET) as { id: string };
 
-        if (new Date(stored.expiresAt) < new Date()) {
-            throw new Error("Refresh token expired");
-        }
+    const latest = await refreshRepo.getLatestActiveToken(payload.id);
+    if (!latest || latest.token !== oldToken) {
+      throw new Error("Not the latest refresh token");
+    }
 
-        // Verify signature & extract payload
-        const payload = jwt.verify(oldToken, REFRESH_SECRET) as { id: string };
+    await refreshRepo.revokeToken(stored.id);
 
-        // ✅ Ensure this is the *latest* token for the user
-        const latest = await prisma.refreshToken.findFirst({
-            where: { userId: payload.id, revoked: false },
-            orderBy: { createdAt: "desc" },
-        });
+    const newRefresh = signRefreshToken(payload.id);
+    const refreshExpiry = dayjs().add(REFRESH_EXP_DAYS, "day").toDate();
 
-        if (!latest || latest.token !== oldToken) {
-            throw new Error("Not the latest refresh token");
-        }
+    await refreshRepo.createToken(payload.id, newRefresh, refreshExpiry);
+    const newAccess = signAccessToken(payload.id);
 
-        // Revoke the old one
-        await prisma.refreshToken.update({
-            where: { token: oldToken },
-            data: { revoked: true },
-        });
+    return { accessToken: newAccess, refreshToken: newRefresh };
+  },
 
-        // Issue new refresh token
-        const newRefresh = signRefreshToken(payload.id);
-        const refreshExpiry = dayjs().add(REFRESH_EXP_DAYS, "day").toDate();
+  async logout(token: string) {
+    await refreshRepo.revokeByToken(token);
+  },
 
-        await prisma.refreshToken.create({
-            data: {
-                token: newRefresh,
-                userId: payload.id,
-                expiresAt: refreshExpiry,
-            },
-        });
+  async requestPasswordReset(email: string) {
+    const user = await userRepo.getUserByEmail(email);
+    if (!user) return;
 
-        // Issue new access token
-        const newAccess = signAccessToken(payload.id);
+    const token = crypto.randomBytes(32).toString("hex");
+    const expiresAt = dayjs().add(RESET_TOKEN_EXP_MIN, "minute").toDate();
 
-        return { accessToken: newAccess, refreshToken: newRefresh };
-    },
+    await resetRepo.createToken(user.id, token, expiresAt);
 
-    async logout(token: string) {
-        await prisma.refreshToken.updateMany({ where: { token }, data: { revoked: true } });
-    },
+    const resetUrl = `${APP_URL}/reset-password?token=${token}&id=${user.id}`;
+    await sendResetEmail(user.email, resetUrl);
+  },
 
-    async requestPasswordReset(email: string) {
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (!user) return;
+  async resetPassword(token: string, password: string) {
+    const rt = await resetRepo.getToken(token);
+    if (!rt || rt.used || new Date(rt.expiresAt) < new Date()) {
+      throw new Error("Invalid or expired reset token");
+    }
 
-        const token = crypto.randomBytes(32).toString("hex");
-        const expiresAt = dayjs().add(RESET_TOKEN_EXP_MIN, "minute").toDate();
+    const passwordHash = await argon2.hash(password);
+    await userRepo.updateUser(rt.userId, { passwordHash });
+    await resetRepo.markAsUsed(rt.id);
+  },
 
-        await prisma.resetToken.create({ data: { token, userId: user.id, expiresAt } });
+  async getCurrentUser(token: string) {
+    try {
+      const payload = jwt.verify(token, ACCESS_SECRET) as { id: string };
+      const user = await userRepo.getUserById(payload.id);
 
-        const resetUrl = `${APP_URL}/reset-password?token=${token}&id=${user.id}`;
-        // emails in prod run in the background
-        await sendResetEmail(user.email, resetUrl);
-    },
+      if (!user) throw new Error("User not found");
 
-    async resetPassword(token: string, password: string) {
-        const rt = await prisma.resetToken.findUnique({ where: { token } });
-        if (!rt || rt.used || new Date(rt.expiresAt) < new Date()) {
-            throw new Error("Invalid or expired reset token");
-        }
-
-        const passwordHash = await argon2.hash(password);
-        await prisma.user.update({ where: { id: rt.userId }, data: { passwordHash } });
-        await prisma.resetToken.update({ where: { token }, data: { used: true } });
-    },
+      const { passwordHash, ...safeUser } = user;
+      return safeUser;
+    } catch (err) {
+      throw new Error("Invalid or expired access token");
+    }
+  },
 };

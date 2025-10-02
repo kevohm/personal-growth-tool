@@ -1,6 +1,8 @@
 // useAuth.ts
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createGuest, initUser, login, loginAsGuest, logout, setCurrentUser, signup } from "./api";
+import type { User } from "../../models/user";
+import { setTokens } from "../axios";
+import { createGuest, initUser, login, loginAsGuest, logout, setCurrentUserId, signup } from "./api";
 
 export const useCurrentUser = () => {
     return useQuery({
@@ -14,7 +16,7 @@ export const useSignup = () => {
     return useMutation({
         mutationFn: async (vars: { email: string; password: string; name: string }) => {
             const user = await signup(vars.email, vars.password, vars.name);
-            setCurrentUser(user.id);
+            setCurrentUserId(user.id);
             return user;
         },
         onSuccess: () => qc.invalidateQueries({ queryKey: ["currentUser"] }),
@@ -24,12 +26,11 @@ export const useSignup = () => {
 export const useLogin = () => {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: async (vars: { email: string; password: string }) => {
-            const user = await login(vars.email, vars.password);
-            setCurrentUser(user.id);
-            return user;
+        mutationFn: ({ email, password }: Pick<User, "email" | "password">) => login(email, password),
+        onSuccess: (data) => {
+            setTokens(data.tokens)
+            qc.invalidateQueries({ queryKey: ["currentUser"] })
         },
-        onSuccess: () => qc.invalidateQueries({ queryKey: ["currentUser"] }),
     });
 };
 
@@ -49,7 +50,7 @@ export const useGuest = () => {
     return useMutation({
         mutationFn: async (name?: string) => {
             const user = await createGuest(name);
-            setCurrentUser(user.id);
+            setCurrentUserId(user.id);
             return user;
         },
         onSuccess: () => qc.invalidateQueries({ queryKey: ["currentUser"] }),
