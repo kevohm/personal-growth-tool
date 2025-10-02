@@ -16,7 +16,7 @@ import { Textarea } from "../../../../components/ui/Textarea";
 import { useAuth } from "../../../../hooks/useAuth";
 
 const AddExpense: React.FC = () => {
-  const { user, isLoading } = useAuth();
+  const { user, } = useAuth();
   const { mutateAsync } = useAddExpense();
   const navigate = useNavigate();
   const [form, setForm] = React.useState<ExpenseFormType>({
