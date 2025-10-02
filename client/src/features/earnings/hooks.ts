@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, type UseQueryOptions } from "@tanstack/react-query";
 import type { EarningUpdate } from "../../models/earning";
 import type { Range } from "../../utils/analytics";
 import {
@@ -9,6 +9,7 @@ import {
   fetchEarnings,
   updateEarning,
 } from "./api";
+import type { Earning } from "../../types/types";
 
 // ✅ Hook to get earnings analytics
 export const useEarningAnalytics = (range: Range) => {
@@ -19,10 +20,11 @@ export const useEarningAnalytics = (range: Range) => {
 };
 
 // ✅ Hook to get earnings
-export const useEarnings = () => {
+export const useEarnings = (params?:{userId?:string}, options?: Omit<UseQueryOptions<Earning[], Error >, "queryKey" | "queryFn"> ) => {
   return useQuery({
-    queryKey: ["earnings"],
-    queryFn: fetchEarnings,
+    queryKey: ["earnings", params],
+    queryFn: ()=>fetchEarnings(params),
+    ...options
   });
 };
 export const useEarning = (id?:string) => {

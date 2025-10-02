@@ -16,6 +16,7 @@ import { Textarea } from "../../../../components/ui/Textarea";
 import type { SavingFormType } from "../../../../types/types";
 import { DatePicker } from "../../../../components/ui/DatePicker";
 import dayjs from "dayjs";
+import { useAuth } from "../../../../hooks/useAuth";
 
 const defaultBody: SavingFormType = {
   amount: 0,
@@ -32,6 +33,7 @@ const AddSaving: React.FC = () => {
   const { mutateAsync } = useAddSaving();
   const [form, setForm] = React.useState<SavingFormType>(defaultBody);
   const navigate = useNavigate();
+  const {user} = useAuth()
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -69,7 +71,11 @@ const AddSaving: React.FC = () => {
       handleError(err);
     }
   };
-
+  React.useEffect(()=>{
+    if(user?.id && !form.userId){
+      setForm(prev=>({...prev, userId:user.id}))
+    }
+  },[user])
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       {/* Page Title */}

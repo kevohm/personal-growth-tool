@@ -51,9 +51,9 @@ export const fetchExpenseAnalytics = async (range: Range = "30d") => {
 
 
 // ✅ Read all expenses
-export const fetchExpenses = async () => {
+export const fetchExpenses = async (params?: { userId?: string }) => {
     const db = await getDb();
-    const docs = await db.expenses.find().exec()
+    const docs = await db.expenses.find({ selector: params }).exec()
     return docs.map((d: any) => d.toJSON());
 };
 
@@ -61,11 +61,11 @@ export const fetchExpenses = async () => {
 
 // ✅ Read single expense by id
 export const fetchExpenseById = async (id: string) => {
-  const db = await getDb();
-  const doc = await db.expenses.findOne({ selector: { id } }).exec();
+    const db = await getDb();
+    const doc = await db.expenses.findOne({ selector: { id } }).exec();
 
-  if (!doc) return null; // return null if not found
-  return doc.toJSON();
+    if (!doc) return null; // return null if not found
+    return doc.toJSON();
 };
 
 // ✅ Create new expense
@@ -75,7 +75,7 @@ export const addExpense = async (expense: Expense) => {
 };
 
 // ✅ Update expense
-export const updateExpense = async (id: string, updates:ExpenseUpdate) => {
+export const updateExpense = async (id: string, updates: ExpenseUpdate) => {
     const db = await getDb();
     const doc = await db.expenses.findOne({ selector: { id } }).exec();
 

@@ -1,30 +1,31 @@
-import { createId } from "@paralleldrive/cuid2";
+import dayjs from "dayjs";
 import * as React from "react";
 import toast from "react-hot-toast";
 import { useAddExpense } from "../../../../features/expenses/hooks";
 import { expenseZodSchema } from "../../../../models/expense";
 import type { ExpenseFormType } from "../../../../types/types";
 import { handleError } from "../../../../utils/error";
-import dayjs from "dayjs";
 
 /* ✅ Shared UI components */
+import { useNavigate } from "@tanstack/react-router";
 import { DatePicker } from "../../../../components/ui/DatePicker";
 import { FormFieldWrapper } from "../../../../components/ui/FormFieldWrapper";
 import { Input } from "../../../../components/ui/Input";
 import { Select } from "../../../../components/ui/Select";
 import { Textarea } from "../../../../components/ui/Textarea";
-import { useNavigate } from "@tanstack/react-router";
+import { useAuth } from "../../../../hooks/useAuth";
 
 const AddExpense: React.FC = () => {
+  const { user, isLoading } = useAuth();
   const { mutateAsync } = useAddExpense();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [form, setForm] = React.useState<ExpenseFormType>({
     name: "",
     amount: 0,
     category: "",
     notes: "",
     date: "",
-    userId: createId(),
+    userId: "",
   });
 
   const handleChange = (
@@ -54,11 +55,17 @@ const AddExpense: React.FC = () => {
         notes: "",
         date: "",
       } as ExpenseFormType);
-      navigate({to:"/home/expenses"})
+      navigate({ to: "/home/expenses" });
     } catch (err) {
       handleError(err);
     }
   };
+
+  React.useEffect(() => {
+    if (user?.id && !form.userId) {
+      setForm((prev) => ({ ...prev, userId: user?.id }));
+    }
+  }, [user]);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
@@ -111,7 +118,6 @@ const AddExpense: React.FC = () => {
         {/* Date */}
         <FormFieldWrapper label="Date" htmlFor="date">
           <DatePicker
-          
             value={
               form.date ? dayjs(form.date, "YYYY-MM-DD").toDate() : undefined
             }

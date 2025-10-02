@@ -1,4 +1,3 @@
-import { createId } from "@paralleldrive/cuid2";
 import dayjs from "dayjs";
 import * as React from "react";
 import toast from "react-hot-toast";
@@ -13,19 +12,21 @@ import { DatePicker } from "../../../../components/ui/DatePicker";
 import { FormFieldWrapper } from "../../../../components/ui/FormFieldWrapper";
 import { Input } from "../../../../components/ui/Input";
 import { Textarea } from "../../../../components/ui/Textarea";
+import { useAuth } from "../../../../hooks/useAuth";
 
 const defaultBody = {
   source: "",
   amount: 0,
   notes: "",
   date: "",
-  userId: createId(),
+  userId: "",
 };
 
 const AddEarning: React.FC = () => {
   const { mutateAsync } = useAddEarning();
   const [form, setForm] = React.useState<EarningFormType>(defaultBody);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -53,6 +54,11 @@ const AddEarning: React.FC = () => {
     }
   };
 
+  React.useEffect(() => {
+    if (user?.id && !form.userId) {
+      setForm((prev) => ({ ...prev, userId: user?.id }));
+    }
+  }, [user]);
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       {/* Page Title */}

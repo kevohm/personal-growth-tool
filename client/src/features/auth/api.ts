@@ -71,7 +71,7 @@ export const logout = async () => {
 export const initUser = async () => {
     try {
         const response = await api.get(`/auth/me`);
-        return response.data;
+        return response.data.user;
     } catch {
         clearCurrentUserId();
         clearTokens();
@@ -83,7 +83,7 @@ export const getCurrentUser = async () => {
 
     try {
         const response = await api.get(`/auth/me`);
-        return response.data;
+        return response.data.user;
     }
     catch { return null; }
 }

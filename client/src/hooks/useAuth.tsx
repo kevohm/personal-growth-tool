@@ -12,7 +12,7 @@ type User = {
 export const useAuth = () => {
   const { data, isLoading, error } = useCurrentUser();
 
-  const user = data as DeepReadonlyObject<User> | null;
+  const user = data as User | null;
 
   return {
     user,        // logged in user or null

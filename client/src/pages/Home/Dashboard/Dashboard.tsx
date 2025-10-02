@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { Select } from "../../../components/ui/Select";
-import { useAnalytics, useEarningSummary, useExpenseSummary, useSavingSummary } from "../../../features/analytics/hooks";
+import {
+  useAnalytics,
+  useEarningSummary,
+  useExpenseSummary,
+  useSavingSummary,
+} from "../../../features/analytics/hooks";
 import { useAuth } from "../../../hooks/useAuth";
 import { RANGE_OPTIONS, type Range } from "../../../utils/analytics";
 import AnalyticsSummaryChart from "./components/AnalyticsSummaryChart";
@@ -60,21 +65,23 @@ const Dashboard = () => {
       </div>
 
       {/* Widgets */}
-      <DashboardWidgets range={range} 
-      earningSummary={earningSummary}
-      expenseSummary={expenseSummary}
-      savingSummary={savingSummary}
+      <DashboardWidgets
+        range={range}
+        earningSummary={earningSummary}
+        expenseSummary={expenseSummary}
+        savingSummary={savingSummary}
       />
 
       {/* Analytics Summary Chart */}
-
       {data && (
-        <AnalyticsSummaryChart
-          data={data}
-          colors={colors}
-          series={["expenses", "savings", "earnings"]}
-          range={range}
-        />
+        <div className="bg-white h-max pb-16 rounded-2xl p-5 shadow-sm">
+          <AnalyticsSummaryChart
+            data={data}
+            colors={colors}
+            series={["expenses", "savings", "earnings"]}
+            range={range}
+          />
+        </div>
       )}
     </div>
   );

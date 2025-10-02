@@ -9,6 +9,7 @@ import {
   useEarningAnalytics,
   useEarnings,
 } from "../../../features/earnings/hooks";
+import { useAuth } from "../../../hooks/useAuth";
 import type { Earning } from "../../../models/earning";
 import { RANGE_OPTIONS, type Range } from "../../../utils/analytics";
 import { handleError } from "../../../utils/error";
@@ -32,7 +33,11 @@ const EmptyState: React.FC = () => {
 };
 
 const Earnings: React.FC = () => {
-  const { data: earnings } = useEarnings();
+  const { user } = useAuth();
+  const { data: earnings } = useEarnings(
+    { userId: user?.id },
+    { enabled: !!user?.id }
+  );
   const [range, setRange] = useState<Range>("30d");
   const { data } = useEarningAnalytics(range);
   // console.log(earnings)
