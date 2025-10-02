@@ -1,4 +1,3 @@
-import type { DeepReadonlyObject } from "rxdb";
 import { useCurrentUser } from "../features/auth/hooks";
 
 type User = {
@@ -15,8 +14,8 @@ export const useAuth = () => {
   const user = data as User | null;
 
   return {
-    user,        // logged in user or null
-    isLoading,   // still fetching
+    user, // logged in user or null
+    isLoading, // still fetching
     isGuest: user?.isGuest ?? false,
     isLoggedIn: !!user && !user.isGuest,
     error,
