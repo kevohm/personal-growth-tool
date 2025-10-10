@@ -9,13 +9,14 @@ import {
   fetchEarnings,
   updateEarning,
 } from "./api";
-import type { Earning } from "../../types/types";
+import type { AnalyticType, Earning } from "../../types/types";
 
 // ✅ Hook to get earnings analytics
-export const useEarningAnalytics = (range: Range) => {
+export const useEarningAnalytics = (range: Range, params?:{userId?:string}, options?: Omit<UseQueryOptions<AnalyticType[], Error >, "queryKey" | "queryFn">) => {
   return useQuery({
     queryKey: ["earning-analytics", range],
-    queryFn: () => fetchEarningAnalytics(range),
+    queryFn: () => fetchEarningAnalytics(range, params),
+    ...options
   });
 };
 

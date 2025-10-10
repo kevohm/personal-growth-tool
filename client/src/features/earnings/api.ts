@@ -58,9 +58,9 @@ export const deleteEarning = async (id: string) => {
 };
 
 // ✅ Analytics
-export const fetchEarningAnalytics = async (range: Range = "30d") => {
+export const fetchEarningAnalytics = async (range: Range = "30d",  params?:{userId?:string}) => {
   const db = await getDb();
-  const docs = await db.earnings.find().exec();
+  const docs = await db.earnings.find({selector:params}).exec();
   const earnings = docs.map((d: any) => d.toJSON());
 
   const { end, start } = getDateRange(range);

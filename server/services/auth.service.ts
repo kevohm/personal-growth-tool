@@ -43,7 +43,7 @@ export const AuthService = {
     const user = await userRepo.getUserByEmail(email);
     if (!user) throw new Error("Invalid credentials");
 
-    const ok = await argon2.verify(user.passwordHash, password);
+    const ok = await argon2.verify(user.password, password);
     if (!ok) throw new Error("Invalid credentials");
 
     const accessToken = signAccessToken(user.id);
@@ -103,7 +103,7 @@ export const AuthService = {
     }
 
     const passwordHash = await argon2.hash(password);
-    await userRepo.updateUser(rt.userId, { passwordHash });
+    await userRepo.updateUser(rt.userId, { password:passwordHash });
     await resetRepo.markAsUsed(rt.id);
   },
 
@@ -114,7 +114,7 @@ export const AuthService = {
 
       if (!user) throw new Error("User not found");
 
-      const { passwordHash, ...safeUser } = user;
+      const { password, ...safeUser } = user;
       return safeUser;
     } catch (err) {
       throw new Error("Invalid or expired access token");

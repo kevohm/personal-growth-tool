@@ -1,14 +1,15 @@
 import { useMutation, useQuery, useQueryClient, type UseQueryOptions, type UseQueryResult } from "@tanstack/react-query";
 import type { ExpenseUpdate } from "../../models/expense";
-import type { Expense } from "../../types/types";
+import type { AnalyticType, Expense } from "../../types/types";
 import type { Range } from "../../utils/analytics";
 import { addExpense, deleteExpense, fetchExpenseAnalytics, fetchExpenseById, fetchExpenses, updateExpense } from "./api";
 
 
-export const useExpenseAnalytics = (range: Range) => {
+export const useExpenseAnalytics = (range: Range, params?: { userId?: string }, options?: Omit<UseQueryOptions<AnalyticType[], Error>, "queryKey" | "queryFn"> ) => {
   return useQuery({
     queryKey: ["expense-analytics", range],
-    queryFn: () => fetchExpenseAnalytics(range),
+    queryFn: () => fetchExpenseAnalytics(range, params),
+    ...options
   });
 };
 

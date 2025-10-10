@@ -34,7 +34,7 @@ const Expenses: React.FC = () => {
   const {user} = useAuth()
   const { data: expenses } = useExpenses({userId:user?.id}, {enabled:!!user?.id});
   const [range, setRange] = useState<Range>("30d");
-  const { data } = useExpenseAnalytics(range);
+  const { data } = useExpenseAnalytics(range, {userId:user?.id}, {enabled:!!user?.id});
 
   const navigate = useNavigate();
   const { mutateAsync: deleteExpense } = useDeleteExpense();

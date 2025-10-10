@@ -1,6 +1,7 @@
 import React from "react";
-import type { Range, TotalsResult } from "../../../../utils/analytics";
+import type { Range,  } from "../../../../utils/analytics";
 import Widget from "./Widget";
+import type { TotalsResult } from "../../../../types/types";
 
 const DashboardWidgets: React.FC<{
   range?: Range;

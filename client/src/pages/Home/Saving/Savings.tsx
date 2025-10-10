@@ -34,7 +34,7 @@ const Savings: React.FC = () => {
   const {user} = useAuth()
   const { data: savings } = useSavings({userId:user?.id}, {enabled:!!user?.id});
   const [range, setRange] = useState<Range>("30d");
-  const { data: analytics } = useSavingAnalytics(range);
+  const { data: analytics } = useSavingAnalytics(range, {userId:user?.id}, {enabled:!!user?.id});
 
   const navigate = useNavigate();
   const { mutateAsync: deleteSaving } = useDeleteSaving();

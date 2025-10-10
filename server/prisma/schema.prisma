@@ -10,7 +10,7 @@ datasource db {
 model User {
   id            String         @id @default(uuid())
   email         String         @unique
-  passwordHash  String
+  password      String
   name          String?
   role          user_role      @default(guest)
   createdAt     DateTime       @default(now())

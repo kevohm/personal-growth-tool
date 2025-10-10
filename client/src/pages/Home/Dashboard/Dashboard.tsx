@@ -13,15 +13,15 @@ import DashboardWidgets from "./components/DashboardWidgets";
 
 const Dashboard = () => {
   const [range, setRange] = useState<Range>("30d");
-
-  const { data, isLoading: isAnalyticsLoading } = useAnalytics(range);
   const { user, isLoading } = useAuth();
+
+  const { data, isLoading: isAnalyticsLoading } = useAnalytics(range, {userId:user?.id}, {enabled:!!user?.id});
   const { data: expenseSummary, isLoading: loadingExpenses } =
-    useExpenseSummary(range);
+    useExpenseSummary(range,{userId:user?.id}, {enabled:!!user?.id});
   const { data: savingSummary, isLoading: loadingSavings } =
-    useSavingSummary(range);
+    useSavingSummary(range,{userId:user?.id}, {enabled:!!user?.id});
   const { data: earningSummary, isLoading: loadingEarnings } =
-    useEarningSummary(range);
+    useEarningSummary(range,{userId:user?.id}, {enabled:!!user?.id});
 
   const getGreeting = () => {
     const hour = new Date().getHours();

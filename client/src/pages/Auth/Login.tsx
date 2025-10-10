@@ -3,13 +3,12 @@ import * as React from "react";
 import toast from "react-hot-toast";
 import { FormFieldWrapper } from "../../components/ui/FormFieldWrapper";
 import { Input } from "../../components/ui/Input";
-import { useLogin, useLoginAsGuest } from "../../features/auth/hooks";
+import { useLogin } from "../../features/auth/hooks";
 import AuthLayout from "./AuthLayout";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { mutateAsync: login } = useLogin();
-  const { mutateAsync: loginAsGuest } = useLoginAsGuest();
 
   const [form, setForm] = React.useState({ email: "", password: "" });
 
@@ -18,7 +17,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     await toast.promise(login(form), {
       loading: "Logging in...",
       success: "Welcome back 👋",
@@ -28,11 +27,17 @@ const Login: React.FC = () => {
   };
 
   const handleGuestLogin = async () => {
-    await toast.promise(loginAsGuest(undefined), {
-      loading: "Logging in...",
-      success: "Welcome back 👋",
-      error: "Invalid credentials",
-    });
+    await toast.promise(
+      login({
+        email: "guest@example.com",
+        password: "password",
+      }),
+      {
+        loading: "Logging in...",
+        success: "Welcome back 👋",
+        error: "Invalid credentials",
+      }
+    );
     navigate({ to: "/home" });
   };
 

@@ -3,38 +3,38 @@ import { getDb } from "../../db";
 import { calculateTotals, getDateFormat, getDateRange, getStepUnit, type Range } from "../../utils/analytics";
 
 // ✅ Expenses summary
-export const fetchExpenseSummary = async (range: Range = "30d") => {
+export const fetchExpenseSummary = async (range: Range = "30d", params?: { userId?: string }) => {
   const db = await getDb();
-  const docs = await db.expenses.find().exec();
+  const docs = await db.expenses.find({ selector: params }).exec();
   const expenses = docs.map((d: any) => d.toJSON());
   return calculateTotals(expenses, "amount", range);
 };
 
 // ✅ Savings summary
-export const fetchSavingSummary = async (range: Range = "30d") => {
+export const fetchSavingSummary = async (range: Range = "30d", params?: { userId?: string }) => {
   const db = await getDb();
-  const docs = await db.savings.find().exec();
+  const docs = await db.savings.find({ selector: params }).exec();
   const savings = docs.map((d: any) => d.toJSON());
   return calculateTotals(savings, "amount", range);
 };
 
 // ✅ Earnings summary
-export const fetchEarningSummary = async (range: Range = "30d") => {
+export const fetchEarningSummary = async (range: Range = "30d", params?: { userId?: string }) => {
   const db = await getDb();
-  const docs = await db.earnings.find().exec();
+  const docs = await db.earnings.find({ selector: params }).exec();
   const earnings = docs.map((d: any) => d.toJSON());
   return calculateTotals(earnings, "amount", range);
 };
 
 
 
-export const fetchAnalytics = async (range: Range = "30d") => {
+export const fetchAnalytics = async (range: Range = "30d", params?: { userId?: string }) => {
   const db = await getDb();
 
   const [expensesDocs, savingsDocs, earningsDocs] = await Promise.all([
-    db.expenses.find().exec(),
-    db.savings.find().exec(),
-    db.earnings.find().exec(),
+    db.expenses.find({ selector: params }).exec(),
+    db.savings.find({ selector: params }).exec(),
+    db.earnings.find({ selector: params }).exec(),
   ]);
 
   const expenses = expensesDocs.map((d: any) => d.toJSON());

@@ -11,6 +11,22 @@ export interface Expense {
 
 export type ExpenseFormType = Pick<Expense, "amount" | "name" | "category" | "date" | "userId" | "notes">
 
+export type AnalyticType = {
+  label: string;
+  value: number;
+}
+export type TotalAnalyticType = {
+    label: string;
+    expenses: number;
+    savings: number;
+    earnings: number;
+}
+
+
+export type TotalsResult = {
+  total: number;
+  change: number;
+};
 
 export interface Saving {
   id: string;

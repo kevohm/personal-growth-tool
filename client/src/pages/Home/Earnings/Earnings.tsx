@@ -39,7 +39,7 @@ const Earnings: React.FC = () => {
     { enabled: !!user?.id }
   );
   const [range, setRange] = useState<Range>("30d");
-  const { data } = useEarningAnalytics(range);
+  const { data } = useEarningAnalytics(range, {userId:user?.id}, {enabled:!!user?.id});
   // console.log(earnings)
   const navigate = useNavigate();
   const { mutateAsync: deleteEarning } = useDeleteEarning();

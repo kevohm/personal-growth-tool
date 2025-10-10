@@ -9,13 +9,14 @@ import {
 } from "./api";
 import type { Range } from "../../utils/analytics";
 import type { SavingUpdate } from "../../models/saving";
-import type { Saving } from "../../types/types";
+import type { AnalyticType, Saving } from "../../types/types";
 
 // ✅ Hook to get saving analytics
-export const useSavingAnalytics = (range: Range) => {
+export const useSavingAnalytics = (range: Range, params?:{userId?:string},options?:Omit<UseQueryOptions<AnalyticType[], Error>, "queryKey" | "queryFn">) => {
   return useQuery({
     queryKey: ["saving-analytics", range],
-    queryFn: () => fetchSavingAnalytics(range),
+    queryFn: () => fetchSavingAnalytics(range, params),
+    ...options
   });
 };
 

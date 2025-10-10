@@ -4,7 +4,7 @@ import { User, user_role } from '@prisma/client';
 export class UserRepository {
   async createUser(email: string, passwordHash: string, name?: string, role: user_role = "guest"): Promise<User> {
     return prisma.user.create({
-      data: { email, passwordHash, name, role },
+      data: { email, password:passwordHash, name, role },
     });
   }
 

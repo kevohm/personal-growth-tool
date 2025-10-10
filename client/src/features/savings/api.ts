@@ -4,20 +4,21 @@ dayjs.extend(isBetween);
 
 import { getDb } from "../../db";
 import type { SavingUpdate } from "../../models/saving";
+import type { Saving } from "../../types/types";
 import {
   getDateFormat,
   getDateRange,
   getStepUnit,
   type Range,
 } from "../../utils/analytics";
-import type {Saving} from "../../types/types"
+
 
 // ✅ Fetch savings analytics
-export const fetchSavingAnalytics = async (range: Range = "30d") => {
+export const fetchSavingAnalytics = async (range: Range = "30d", params?: { userId?: string }) => {
   const db = await getDb();
-  const docs = await db.savings.find().exec();
+  const docs = await db.savings.find({ selector: params }).exec();
   const savings = docs.map((d: any) => d.toJSON()) ?? [];
-  
+
   const { end, start } = getDateRange(range);
   const timeFormat = getDateFormat(range);
 
@@ -53,10 +54,10 @@ export const fetchSavingAnalytics = async (range: Range = "30d") => {
 };
 
 // ✅ Read all savings
-export const fetchSavings = async (params?:{userId?:string}) => {
+export const fetchSavings = async (params?: { userId?: string }) => {
   const db = await getDb();
-  const docs = await db.savings.find({selector:params}).exec();
-  return docs.map((d:any) => d.toJSON());
+  const docs = await db.savings.find({ selector: params }).exec();
+  return docs.map((d: any) => d.toJSON());
 };
 
 // ✅ Read single saving by id

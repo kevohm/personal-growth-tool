@@ -71,7 +71,9 @@ const HomeWrapper = () => {
               <Link
                 key={`${link}-${index}`}
                 to={link.href}
+                activeOptions={{ exact: link.href === "/home" }}
                 activeProps={{
+
                   className:
                     "bg-green-50 text-green-600 border-green-200 font-medium",
                 }}

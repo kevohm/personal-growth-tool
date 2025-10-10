@@ -7,9 +7,9 @@ import { getDb } from "../../db";
 import type { Expense, ExpenseUpdate } from "../../models/expense";
 import { getDateFormat, getDateRange, getStepUnit, type Range } from "../../utils/analytics";
 
-export const fetchExpenseAnalytics = async (range: Range = "30d") => {
+export const fetchExpenseAnalytics = async (range: Range = "30d", params?: { userId?: string }) => {
     const db = await getDb();
-    const docs = await db.expenses.find().exec();
+    const docs = await db.expenses.find({selector:params}).exec();
     const expenses = docs.map((d: any) => d.toJSON());
 
     const { end, start } = getDateRange(range);
