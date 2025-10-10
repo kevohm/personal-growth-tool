@@ -3,7 +3,7 @@
     "dev": "dotenvx run -f .env.development -- ts-node-dev --respawn --transpile-only server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "setup": "npm install && npm run prisma:prod:generate && npm run prisma:dev:seed && npm run start",
+    "setup": "npm install && npm run prisma:prod:generate && npm run prisma:dev:seed",
 
     "prisma:dev:generate": "dotenvx run -f .env.development -- prisma generate",
     "prisma:dev:migrate": "echo 'MongoDB does not support migrations, skipping...' && exit 0",
