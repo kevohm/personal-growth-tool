@@ -3,16 +3,12 @@
     "dev": "dotenvx run -f .env.development -- ts-node-dev --respawn --transpile-only server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "setup": "npm install && npm run prisma:prod:generate && npm run prisma:prod:seed",
+    "setup": "npm install",
 
     "prisma:dev:generate": "dotenvx run -f .env.development -- prisma generate",
-    "prisma:dev:migrate": "echo 'MongoDB does not support migrations, skipping...' && exit 0",
-    "prisma:dev:reset": "echo 'Reset not applicable for MongoDB, clearing data manually if needed.' && exit 0",
     "prisma:dev:seed": "dotenvx run -f .env.development -- ts-node prisma/seed.ts",
     "prisma:dev:studio": "dotenvx run -f .env.development -- prisma studio",
     "prisma:prod:generate": "prisma generate",
-    "prisma:prod:migrate": "echo 'MongoDB does not use migrations, skipping.' && exit 0",
-    "prisma:prod:reset": "echo 'MongoDB reset skipped.' && exit 0",
     "prisma:prod:seed": "ts-node prisma/seed.ts",
     "prisma:prod:studio": "prisma studio"
   },
