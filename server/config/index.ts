@@ -24,13 +24,3 @@ export const SMTP_PORT = Number(requireEnv("SMTP_PORT", "587"));
 export const SMTP_USER = requireEnv("SMTP_USER");
 export const SMTP_PASS = requireEnv("SMTP_PASS");
 
-// Create reusable transporter object using SMTP
-export const transporter = nodemailer.createTransport({
-  host: SMTP_HOST,
-  port: SMTP_PORT,
-  secure: false, // use TLS (false for ports 587, true for 465)
-  auth: {
-    user: SMTP_USER,
-    pass: SMTP_PASS,
-  },
-});

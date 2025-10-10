@@ -1,6 +1,17 @@
 import nodemailer from "nodemailer"
-import { transporter } from "../config";
+import { SMTP_HOST, SMTP_PASS, SMTP_PORT, SMTP_USER } from "../config";
 
+
+// Create reusable transporter object using SMTP
+export const transporter = nodemailer.createTransport({
+  host: SMTP_HOST,
+  port: SMTP_PORT,
+  secure: false, // use TLS (false for ports 587, true for 465)
+  auth: {
+    user: SMTP_USER,
+    pass: SMTP_PASS,
+  },
+});
 
 export async function sendResetEmail(to: string, resetUrl: string) {
   const info = await transporter.sendMail({
