@@ -15,8 +15,7 @@ async function main() {
         role: user_role.guest,
     }]
     await prisma.user.createMany({
-        data: users,
-        skipDuplicates:true
+        data: users
     })
 }
 
