@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only server.ts",
+    "dev": "dotenvx run -f .env.development -- ts-node-dev --respawn --transpile-only server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "prisma:generate": "prisma generate",
@@ -14,6 +14,7 @@
     "seed": "ts-node-dev prisma/seed.ts"
   },
   "dependencies": {
+    "@dotenvx/dotenvx": "^1.51.0",
     "@prisma/client": "^6.16.3",
     "argon2": "^0.44.0",
     "cookie-parser": "^1.4.7",
