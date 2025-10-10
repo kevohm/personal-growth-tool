@@ -3,18 +3,18 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id            String         @id @default(uuid())
-  email         String         @unique
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  email         String          @unique
   password      String
   name          String?
-  role          user_role      @default(guest)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  role          user_role       @default(guest)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   resetTokens   ResetToken[]
   refreshTokens RefreshToken[]
 }
@@ -25,22 +25,22 @@ enum user_role {
 }
 
 model ResetToken {
-  id        String   @id @default(uuid())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   token     String   @unique
+  userId    String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id])
-  userId    String
   expiresAt DateTime
   used      Boolean  @default(false)
   createdAt DateTime @default(now())
 }
 
 model RefreshToken {
-  id         String   @id @default(uuid())
-  token      String   @unique
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-  revoked    Boolean  @default(false)
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  replacedBy String? // optional: for rotation
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  token       String   @unique
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id])
+  revoked     Boolean  @default(false)
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  replacedBy  String?  // optional: for rotation
 }
