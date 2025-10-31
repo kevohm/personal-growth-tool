@@ -56,3 +56,5 @@ export const getDb = async (): Promise<FinanceDatabase> => {
   }
   return dbPromise;
 };
+
+// > client.ts
