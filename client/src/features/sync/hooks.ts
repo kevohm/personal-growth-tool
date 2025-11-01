@@ -1,7 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getDb } from "../../db";
-import { syncCollectionsWithBackend } from "../../db/db";
-import { getCurrentUser } from "../auth/api";
 import { syncToBackend } from "./api";
 
 export const useReplication = () => {

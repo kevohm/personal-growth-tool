@@ -1,5 +1,4 @@
 import { replicateRxCollection } from "rxdb/plugins/replication";
-import type { Expense, Earning, Saving } from "../types/types";
 import type { FinanceDatabase } from ".";
 import { api } from "../features/axios";
 
@@ -47,13 +46,13 @@ export const syncCollectionsWithBackend = async (
   };
 
   // ---- SETUP REPLICATIONS ----
-  const expenseReplication = createReplication(
+  createReplication(
     "expenses",
     "expenses",
     db.expenses
   );
-  const savingReplication = createReplication("savings", "savings", db.savings);
-  const earningReplication = createReplication(
+  createReplication("savings", "savings", db.savings);
+ createReplication(
     "earnings",
     "earnings",
     db.earnings

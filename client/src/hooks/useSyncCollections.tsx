@@ -1,6 +1,5 @@
 import toast from "react-hot-toast";
 import { getDb } from "../db";
-import { getCurrentUserId } from "../features/auth/api";
 import { syncCollectionsWithBackend } from "../db/db";
 import { useAuth } from "./useAuth";
 
