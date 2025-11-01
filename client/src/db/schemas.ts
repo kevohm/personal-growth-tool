@@ -3,8 +3,9 @@ const primaryKeyStructure = { type: "string", maxLength: 128, }
 const baseSchema = {
   id: primaryKeyStructure,
   createdAt: { type: "string", format: "date-time" },
-  updatedAt: { type: "string", format: "date-time" }
-}
+  updatedAt: { type: "string", format: "date-time" },
+  isDeleted: { type: "boolean", default: false },
+};
 export const userSchema = {
   title: "user schema",
   version: 0,

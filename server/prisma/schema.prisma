@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  id            String          @id @default(cuid()) @map("_id") @db.String
   email         String          @unique
   password      String
   name          String?
@@ -17,6 +17,9 @@ model User {
   updatedAt     DateTime        @updatedAt
   resetTokens   ResetToken[]
   refreshTokens RefreshToken[]
+  expenses      Expense[]
+  savings       Saving[]
+  earnings      Earning[]
 }
 
 enum user_role {
@@ -25,9 +28,9 @@ enum user_role {
 }
 
 model ResetToken {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(cuid()) @map("_id") @db.String
   token     String   @unique
-  userId    String   @db.ObjectId
+  userId    String   @db.String
   user      User     @relation(fields: [userId], references: [id])
   expiresAt DateTime
   used      Boolean  @default(false)
@@ -35,12 +38,56 @@ model ResetToken {
 }
 
 model RefreshToken {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(cuid()) @map("_id") @db.String
   token       String   @unique
-  userId      String   @db.ObjectId
+  userId      String   @db.String
   user        User     @relation(fields: [userId], references: [id])
   revoked     Boolean  @default(false)
   expiresAt   DateTime
   createdAt   DateTime @default(now())
   replacedBy  String?  // optional: for rotation
+}
+
+model Expense {
+  id         String   @id @default(cuid()) @map("_id") @db.String
+  userId     String   @db.String
+  user       User     @relation(fields: [userId], references: [id])
+  name       String
+  date       DateTime
+  category   String
+  amount     Float
+  notes      String?   // RxDB replication timestamp
+  createdAt  DateTime @default(now())
+  isDeleted  Boolean  @default(false) @map("_deleted")
+  updatedAt  DateTime @updatedAt @map("_updatedAt")
+}
+
+model Saving {
+  id         String    @id @default(cuid()) @map("_id") @db.String
+  userId     String    @db.String
+  user       User      @relation(fields: [userId], references: [id])
+  date       DateTime
+  notes      String?
+  goal       String?
+  amount     Float
+  category   String?
+  source     String?
+  recurring  Boolean   @default(false)
+  tags       String[]  @default([])
+  createdAt  DateTime  @default(now())
+  isDeleted  Boolean  @default(false) @map("_deleted")
+  updatedAt  DateTime @updatedAt @map("_updatedAt")
+}
+
+model Earning {
+  id         String   @id @default(cuid()) @map("_id") @db.String
+  userId     String   @db.String
+  user       User     @relation(fields: [userId], references: [id])
+  date       DateTime
+  source     String
+  notes      String?
+  amount     Float
+  createdAt  DateTime @default(now())
+  isDeleted  Boolean  @default(false) @map("_deleted")
+  updatedAt  DateTime @updatedAt @map("_updatedAt")
 }

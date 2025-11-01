@@ -4,10 +4,11 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "setup": "npm install",
-
+    "prisma:dev:migrate": "dotenvx run -f .env.development -- prisma db push",
     "prisma:dev:generate": "dotenvx run -f .env.development -- prisma generate",
     "prisma:dev:seed": "dotenvx run -f .env.development -- ts-node prisma/seed.ts",
     "prisma:dev:studio": "dotenvx run -f .env.development -- prisma studio",
+    "prisma:prod:migrate": "prisma db push",
     "prisma:prod:generate": "prisma generate",
     "prisma:prod:seed": "ts-node prisma/seed.ts",
     "prisma:prod:studio": "prisma studio"

@@ -16,12 +16,14 @@ import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 import toast from "react-hot-toast";
 import { useLogout } from "../../features/auth/hooks";
+import { useSyncCollections } from "../../hooks/useSyncCollections";
 
 const HomeWrapper = () => {
   const [collapsed, setCollapsed] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { mutateAsync } = useLogout();
-  const navigate = useNavigate()
+  const { syncNow } = useSyncCollections();
+  const navigate = useNavigate();
 
   const links = [
     { title: "Dashboard", href: "/home", icon: HomeIcon },
@@ -73,7 +75,6 @@ const HomeWrapper = () => {
                 to={link.href}
                 activeOptions={{ exact: link.href === "/home" }}
                 activeProps={{
-
                   className:
                     "bg-green-50 text-green-600 border-green-200 font-medium",
                 }}
@@ -96,31 +97,51 @@ const HomeWrapper = () => {
         </nav>
 
         {/* Logout */}
+        <div className="flex flex-col gap-2.5">
+          <div className="px-2 py-2 ">
+            <button
+              onClick={syncNow}
+              className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200"
+            >
+              <BarChartIcon className="h-5 w-5" />
+              {!collapsed && (
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="text-sm"
+                >
+                  Sync with Backend
+                </motion.span>
+              )}
+            </button>
+          </div>
 
-        <div className="px-2 py-4 border-t border-gray-100">
-          <button
-            onClick={async () => {
-              await toast.promise(mutateAsync(), {
-                loading: "Logging out...",
-                success: "Logged out successfully 👋",
-                error: "Failed to logout. Please try again.",
-              });
-              navigate({to:"/auth"})
-            }}
-            className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors duration-200"
-          >
-            <ExitIcon className="h-5 w-5" />
-            {!collapsed && (
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="text-sm"
-              >
-                Logout
-              </motion.span>
-            )}
-          </button>
+          <div className="px-2 py-4 border-t border-gray-100">
+            <button
+              onClick={async () => {
+                await toast.promise(mutateAsync(), {
+                  loading: "Logging out...",
+                  success: "Logged out successfully 👋",
+                  error: "Failed to logout. Please try again.",
+                });
+                navigate({ to: "/auth" });
+              }}
+              className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors duration-200"
+            >
+              <ExitIcon className="h-5 w-5" />
+              {!collapsed && (
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="text-sm"
+                >
+                  Logout
+                </motion.span>
+              )}
+            </button>
+          </div>
         </div>
       </motion.aside>
 
@@ -165,23 +186,42 @@ const HomeWrapper = () => {
                 })}
               </nav>
 
-              <div className="px-2 py-4 border-t border-gray-100">
-                <button
-                  onClick={async () => {
-                    await toast.promise(mutateAsync(), {
-                      loading: "Logging out...",
-                      success: "Logged out successfully 👋",
-                      error: "Failed to logout. Please try again.",
-                    });
-                    setMobileOpen(false);
-                    navigate({to:"/auth"})
-
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors duration-200"
-                >
-                  <ExitIcon className="h-5 w-5" />
-                  <span className="text-sm">Logout</span>
-                </button>
+              <div className="flex flex-col gap-5">
+                <div className="px-2 py-2 ">
+                  <button
+                    onClick={syncNow}
+                    className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200"
+                  >
+                    <BarChartIcon className="h-5 w-5" />
+                    {!collapsed && (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="text-sm"
+                      >
+                        Sync with Backend
+                      </motion.span>
+                    )}
+                  </button>
+                </div>
+                <div className="px-2 py-4 border-t border-gray-100">
+                  <button
+                    onClick={async () => {
+                      await toast.promise(mutateAsync(), {
+                        loading: "Logging out...",
+                        success: "Logged out successfully 👋",
+                        error: "Failed to logout. Please try again.",
+                      });
+                      setMobileOpen(false);
+                      navigate({ to: "/auth" });
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors duration-200"
+                  >
+                    <ExitIcon className="h-5 w-5" />
+                    <span className="text-sm">Logout</span>
+                  </button>
+                </div>
               </div>
             </motion.div>
 
