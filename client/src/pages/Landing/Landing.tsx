@@ -4,11 +4,13 @@ import Lottie from "lottie-react";
 import {
   ArrowRight,
   BarChart3,
+  BookOpen,
   ChevronRight,
   DollarSign,
   Repeat,
   Shield,
   TrendingUp,
+  Users,
 } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
@@ -42,11 +44,65 @@ const stats = [
   { value: "24%", label: "Improved savings" },
 ];
 
+
+
+const CommunityTopBar: React.FC = () => {
+  const links = [
+    {
+      name: "Learning",
+      to: "/learning-guide",
+      icon: <BookOpen className="w-4 h-4" />,
+    },
+    {
+      name: "Earning",
+      to: "/earning-guide",
+      icon: <DollarSign className="w-4 h-4" />,
+    },
+    {
+      name: "Returning",
+      to: "/returning-to-community",
+      icon: <Users className="w-4 h-4" />,
+    },
+  ];
+
+  return (
+    <div className="bg-slate-900 text-slate-100">
+      <div className="max-w-7xl mx-auto px-6 py-2.5 flex flex-wrap items-center justify-center gap-6 text-sm">
+        <span className="hidden sm:inline text-slate-400">
+          Grow with MonyTrack+:
+        </span>
+
+        {links.map((link, index) => (
+          <Link
+            key={link.name}
+            to={link.to}
+            className="
+              group flex items-center gap-1.5 font-medium
+              hover:text-white transition
+            "
+          >
+            <span className="text-green-400">{link.icon}</span>
+            {link.name}
+            <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+            {index < links.length - 1 && (
+              <span className="hidden sm:inline text-slate-600 ml-4">•</span>
+            )}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
+
 const Landing: React.FC = () => {
   const [email, setEmail] = useState("");
 
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* link to /learning-guide  */}
+      <CommunityTopBar/>
       {/* Header */}
       <header className="bg-white sticky top-0 left-0 border-b z-50 border-slate-200">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">

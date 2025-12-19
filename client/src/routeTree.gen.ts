@@ -9,6 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ReturningToCommunityRouteImport } from './routes/returning-to-community'
+import { Route as LearningGuideRouteImport } from './routes/learning-guide'
+import { Route as EarningGuideRouteImport } from './routes/earning-guide'
 import { Route as HomeRouteImport } from './routes/_home'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
@@ -25,6 +28,21 @@ import { Route as HomeHomeSavingsIdEditIndexRouteImport } from './routes/_home/h
 import { Route as HomeHomeExpensesIdEditIndexRouteImport } from './routes/_home/home/expenses/$id/edit/index'
 import { Route as HomeHomeEarningsIdEditIndexRouteImport } from './routes/_home/home/earnings/$id/edit/index'
 
+const ReturningToCommunityRoute = ReturningToCommunityRouteImport.update({
+  id: '/returning-to-community',
+  path: '/returning-to-community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearningGuideRoute = LearningGuideRouteImport.update({
+  id: '/learning-guide',
+  path: '/learning-guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EarningGuideRoute = EarningGuideRouteImport.update({
+  id: '/earning-guide',
+  path: '/earning-guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HomeRoute = HomeRouteImport.update({
   id: '/_home',
   getParentRoute: () => rootRouteImport,
@@ -105,6 +123,9 @@ const HomeHomeEarningsIdEditIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/earning-guide': typeof EarningGuideRoute
+  '/learning-guide': typeof LearningGuideRoute
+  '/returning-to-community': typeof ReturningToCommunityRoute
   '/auth/signup': typeof AuthSignupRoute
   '/auth': typeof AuthIndexRoute
   '/home': typeof HomeHomeIndexRoute
@@ -121,6 +142,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/earning-guide': typeof EarningGuideRoute
+  '/learning-guide': typeof LearningGuideRoute
+  '/returning-to-community': typeof ReturningToCommunityRoute
   '/auth/signup': typeof AuthSignupRoute
   '/auth': typeof AuthIndexRoute
   '/home': typeof HomeHomeIndexRoute
@@ -139,6 +163,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_home': typeof HomeRouteWithChildren
+  '/earning-guide': typeof EarningGuideRoute
+  '/learning-guide': typeof LearningGuideRoute
+  '/returning-to-community': typeof ReturningToCommunityRoute
   '/auth/signup': typeof AuthSignupRoute
   '/auth/': typeof AuthIndexRoute
   '/_home/home/': typeof HomeHomeIndexRoute
@@ -157,6 +184,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/earning-guide'
+    | '/learning-guide'
+    | '/returning-to-community'
     | '/auth/signup'
     | '/auth'
     | '/home'
@@ -173,6 +203,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/earning-guide'
+    | '/learning-guide'
+    | '/returning-to-community'
     | '/auth/signup'
     | '/auth'
     | '/home'
@@ -190,6 +223,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_home'
+    | '/earning-guide'
+    | '/learning-guide'
+    | '/returning-to-community'
     | '/auth/signup'
     | '/auth/'
     | '/_home/home/'
@@ -208,12 +244,36 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   HomeRoute: typeof HomeRouteWithChildren
+  EarningGuideRoute: typeof EarningGuideRoute
+  LearningGuideRoute: typeof LearningGuideRoute
+  ReturningToCommunityRoute: typeof ReturningToCommunityRoute
   AuthSignupRoute: typeof AuthSignupRoute
   AuthIndexRoute: typeof AuthIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/returning-to-community': {
+      id: '/returning-to-community'
+      path: '/returning-to-community'
+      fullPath: '/returning-to-community'
+      preLoaderRoute: typeof ReturningToCommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learning-guide': {
+      id: '/learning-guide'
+      path: '/learning-guide'
+      fullPath: '/learning-guide'
+      preLoaderRoute: typeof LearningGuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/earning-guide': {
+      id: '/earning-guide'
+      path: '/earning-guide'
+      fullPath: '/earning-guide'
+      preLoaderRoute: typeof EarningGuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_home': {
       id: '/_home'
       path: ''
@@ -355,6 +415,9 @@ const HomeRouteWithChildren = HomeRoute._addFileChildren(HomeRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   HomeRoute: HomeRouteWithChildren,
+  EarningGuideRoute: EarningGuideRoute,
+  LearningGuideRoute: LearningGuideRoute,
+  ReturningToCommunityRoute: ReturningToCommunityRoute,
   AuthSignupRoute: AuthSignupRoute,
   AuthIndexRoute: AuthIndexRoute,
 }
